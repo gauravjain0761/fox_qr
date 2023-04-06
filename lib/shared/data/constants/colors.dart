@@ -29,7 +29,12 @@ class AppColors {
   static Color get goldColor => const Color(0xffd4af37);
   static Color get successColor => const Color(0xff00ab41);
   static Color get scaffoldColor => const Color(0xffDBF5FC);
+  static Color get textcolor => const Color(0xff9babb0);
+  static Color get bordercolor => const Color(0xffe5e5e5);
+  static Color get grey500 => const Color(0xff7e7e7f);
+  static Color get unselectedtext => const Color(0xff789ea8);
 
+  static Color get yellowcolor => const Color(0xffFFFF70);
   static LinearGradient get postDetailGradient1 => LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,

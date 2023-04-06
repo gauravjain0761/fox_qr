@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fox/features/past_qr/index.dart';
+import 'package:fox/features/past_qr/qr_reports.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
 
@@ -48,7 +48,7 @@ class _DisplayQRDetailsScreenState extends State<DisplayQRDetailsScreen> {
               ),
               sizedBoxWithHeight(8),
               Text(
-                'Website QRs',
+                'Website QR',
                 style: AppText.text16w400,
                 textAlign: TextAlign.center,
               ),
@@ -57,6 +57,9 @@ class _DisplayQRDetailsScreenState extends State<DisplayQRDetailsScreen> {
                 onClick: () {},
                 label: 'Download QR',
                 width: 180,
+                textStyle: AppText.text17w600.copyWith(
+                  color: AppColors.white,
+                ),
                 highLightedTextColor: AppColors.white,
                 primaryColor: AppColors.pinkColor,
               ),

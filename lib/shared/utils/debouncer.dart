@@ -1,6 +1,7 @@
-import 'package:fox/shared/shared.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:async';
+
+import '../data/data.dart';
 
 class Debouncer {
   final int? milliseconds;

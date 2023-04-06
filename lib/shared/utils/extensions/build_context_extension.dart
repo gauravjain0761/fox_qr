@@ -4,8 +4,11 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
+
+import '../../data/data.dart';
+import '../../ui/common/common.dart';
+import '../utils.dart';
 
 extension BuildContextExtension on BuildContext {
   TextTheme get textTheme => Theme.of(this).textTheme;

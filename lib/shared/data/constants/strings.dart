@@ -89,6 +89,6 @@ class Strings {
     'No Tracking',
     'Expires After 30 Days',
     "Url Content Point Only",
-    'Contains Adss'
+    'Contains Ads'
   ];
 }

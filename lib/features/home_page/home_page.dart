@@ -11,6 +11,44 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  List<QrTypes> qrtypes = [
+    QrTypes(
+      image: const Icon(
+        Icons.link,
+      ),
+      title: "Website",
+    ),
+    QrTypes(
+      image: const Icon(
+        Icons.email_outlined,
+      ),
+      title: "Email",
+    ),
+    QrTypes(
+      image: const Icon(
+        Icons.phone_android_outlined,
+      ),
+      title: "Whatsapp",
+    ),
+    QrTypes(
+      image: const Icon(
+        Icons.location_on_outlined,
+      ),
+      title: "Location",
+    ),
+    QrTypes(
+      image: const Icon(
+        Icons.favorite_border,
+      ),
+      title: "Social Media",
+    ),
+    QrTypes(
+      image: const Icon(
+        Icons.wifi_sharp,
+      ),
+      title: "Wi-Fi",
+    )
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -45,15 +83,15 @@ class _HomePageState extends State<HomePage> {
         Expanded(
           child: ListView.builder(
             shrinkWrap: true,
-            itemCount: 16,
-            itemBuilder: (_, index) => _renderListItem(),
+            itemCount: qrtypes.length,
+            itemBuilder: (_, index) => _renderListItem(index: index),
           ),
         ),
       ],
     );
   }
 
-  Widget _renderListItem() {
+  Widget _renderListItem({required int index}) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 32.w, vertical: 8.h),
       padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 24.w),
@@ -66,7 +104,7 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Whatsapp',
+            qrtypes.elementAt(index).title,
             style: AppText.text24w600.copyWith(
               color: AppColors.black,
             ),
@@ -74,10 +112,19 @@ class _HomePageState extends State<HomePage> {
           CircleAvatar(
             radius: 24.r,
             backgroundColor: AppColors.black,
-            child: const AppImage(Images.whatsAppIcon),
+            child: qrtypes.elementAt(index).image,
           )
         ],
       ),
     );
   }
+}
+
+class QrTypes {
+  final String title;
+  final Icon image;
+  QrTypes({
+    required this.image,
+    required this.title,
+  });
 }

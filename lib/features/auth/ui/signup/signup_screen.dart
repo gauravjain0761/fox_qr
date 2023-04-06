@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fox/shared/shared.dart';
 
+import '../../../../themes/app_text.dart';
+
+
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
@@ -9,6 +12,9 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  bool tncchecked = false;
+  bool ppchecked = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,6 +73,112 @@ class _SignupScreenState extends State<SignupScreen> {
         Divider(color: AppColors.greyColor.withOpacity(0.12), height: 1.h),
         sizedBoxWithHeight(40),
         AppTextFormField(name: 'username'),
+        sizedBoxWithHeight(120),
+        Row(
+          children: [
+            InkWell(
+              onTap: () {
+                setState(() {
+                  tncchecked = !tncchecked;
+                });
+              },
+              child: Container(
+                height: 25.h,
+                width: 25.w,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(
+                    7.r,
+                  ),
+                  border: Border.all(
+                    color: AppColors.black,
+                    width: 2,
+                  ),
+                ),
+                child: Center(
+                  child: tncchecked
+                      ? Icon(
+                          Icons.check,
+                          size: 20.h,
+                          color: AppColors.black,
+                        )
+                      : SizedBox(),
+                ),
+              ),
+            ),
+            sizedBoxWithWidth(18),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: "I agree to the ",
+                    style: AppText.text12w400,
+                  ),
+                  TextSpan(
+                    text: "Terms and Conditions",
+                    style: AppText.text12w400.copyWith(
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.underline,
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+        sizedBoxWithHeight(20),
+        Row(
+          children: [
+            InkWell(
+              onTap: () {
+                setState(() {
+                  ppchecked = !ppchecked;
+                });
+              },
+              child: Container(
+                height: 25.h,
+                width: 25.w,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(
+                    7.r,
+                  ),
+                  border: Border.all(
+                    color: AppColors.black,
+                    width: 2,
+                  ),
+                ),
+                child: Center(
+                  child: ppchecked
+                      ? Icon(
+                          Icons.check,
+                          size: 20.h,
+                          color: AppColors.black,
+                        )
+                      : SizedBox(),
+                ),
+              ),
+            ),
+            sizedBoxWithWidth(18),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: "I agree to the ",
+                    style: AppText.text12w400,
+                  ),
+                  TextSpan(
+                    text: "Privacy Policy",
+                    style: AppText.text12w400.copyWith(
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.underline,
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
+        )
       ],
     );
   }

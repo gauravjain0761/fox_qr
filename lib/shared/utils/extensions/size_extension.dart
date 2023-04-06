@@ -1,4 +1,5 @@
-import 'package:fox/shared/shared.dart';
+
+import '../screen_config.dart';
 
 extension SizeExtension on int {
   ///[ScreenUtil.setWidth]

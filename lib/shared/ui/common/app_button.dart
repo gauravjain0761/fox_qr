@@ -1,4 +1,5 @@
 import 'package:fox/shared/shared.dart';
+
 import 'package:fox/themes/app_text.dart';
 import 'package:flutter/material.dart';
 

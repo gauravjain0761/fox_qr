@@ -67,8 +67,15 @@ class _ContentScreenState extends State<ContentScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 sizedBoxWithHeight(10),
-                Text(widget.data.title, style: AppText.text24w600),
-                Expanded(child: WebViewWidget(controller: _webViewController))
+                Text(
+                  "Terms & Conditions",
+                  style: AppText.text24w600.copyWith(
+                    fontSize: 24.sp,
+                  ),
+                ),
+                Expanded(
+                  child: WebViewWidget(controller: _webViewController),
+                )
               ],
             ),
           ),

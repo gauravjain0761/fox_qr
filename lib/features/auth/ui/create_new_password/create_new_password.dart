@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fox/shared/shared.dart';
+import 'package:fox/themes/app_text.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CreateNewPasswordScreen extends StatefulWidget {
   const CreateNewPasswordScreen({super.key});
@@ -29,7 +31,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
             padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 24.h),
             child: Column(
               children: [
-                const Spacer(),
+                sizedBoxWithHeight(100),
                 _renderForm(),
                 const Spacer(),
                 AppButton(onClick: () {}, label: 'Save'),
@@ -46,7 +48,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
       children: [
         Text(
           'Create New Password',
-          style: TextStyle(
+          style: GoogleFonts.montserrat(
             fontSize: 25.sp,
             fontWeight: FontWeight.w700,
             color: AppColors.black,
@@ -54,18 +56,30 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
         ),
         sizedBoxWithHeight(40),
         Text(
-          'Create a new password for your account',
+          'Create a new password\nfor your account',
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style: GoogleFonts.montserrat(
             fontSize: 15.sp,
             fontWeight: FontWeight.w600,
             color: AppColors.black,
           ),
         ),
         sizedBoxWithHeight(40),
-        AppTextFormField(name: 'password'),
+        AppTextFormField(
+          name: 'password',
+          hintText: "Create A Password",
+          hintStyle: AppText.text15w400.copyWith(
+            color: AppColors.black,
+          ),
+        ),
         sizedBoxWithHeight(20),
-        AppTextFormField(name: 'confirm_password'),
+        AppTextFormField(
+          name: 'confirm_password',
+          hintText: "Re-Enter Password",
+          hintStyle: AppText.text15w400.copyWith(
+            color: AppColors.black,
+          ),
+        ),
       ],
     );
   }

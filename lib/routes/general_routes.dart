@@ -6,6 +6,7 @@ class GeneralRoutes {
   static const generalLeading = '/general-route';
 
   static const dummy = '$generalLeading/dummy';
+  static const createqr = '$generalLeading/createqr';
   static const starterScreen = '$generalLeading/starter_screen';
   static const videoPlayer = '$generalLeading/video-player';
   static const search = '$generalLeading/search';
@@ -29,6 +30,7 @@ class GeneralRoutes {
     appImageViewer,
     preferencesPage,
     privacyPolicy,
+    createqr
   };
 
   static Widget getPage(String currentRoute, Object? args) {
@@ -76,6 +78,9 @@ class GeneralRoutes {
         break;
       case GeneralRoutes.displayQRDetailsScreen:
         child = const DisplayQRDetailsScreen();
+        break;
+      case GeneralRoutes.createqr:
+        child = const CreateQRPage();
         break;
       case GeneralRoutes.imageEditor:
         if (CommonUtils.hasInvalidArgs<Uint8List>(args!)) {

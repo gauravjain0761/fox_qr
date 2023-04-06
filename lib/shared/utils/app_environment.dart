@@ -1,6 +1,6 @@
-import 'package:fox/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:fox/shared/data/enums/widget_enums.dart';
 
 class AppEnvironment {
   AppEnvironment._();

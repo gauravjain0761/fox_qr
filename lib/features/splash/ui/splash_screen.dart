@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -32,18 +33,18 @@ class SplashScreen extends StatelessWidget {
                   Text.rich(
                     TextSpan(
                       text: 'QR',
-                      style: TextStyle(
+                      style: GoogleFonts.montserrat(
                         color: AppColors.pinkColor,
                         fontSize: 48.sp,
-                        fontWeight: FontWeight.w800,
+                        fontWeight: FontWeight.w700,
                       ),
                       children: [
                         TextSpan(
                           text: ' FOX',
-                          style: TextStyle(
+                          style: GoogleFonts.montserrat(
                             color: AppColors.black,
                             fontSize: 48.sp,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w700,
                           ),
                         )
                       ],
@@ -52,7 +53,7 @@ class SplashScreen extends StatelessWidget {
                   const Spacer(),
                   Text(
                     'WELCOME',
-                    style: TextStyle(
+                    style: GoogleFonts.montserrat(
                       fontSize: 35.sp,
                       color: AppColors.black,
                       fontWeight: FontWeight.w700,
@@ -61,7 +62,7 @@ class SplashScreen extends StatelessWidget {
                   sizedBoxWithHeight(26),
                   Text(
                     'Tap To Continue',
-                    style: TextStyle(
+                    style: GoogleFonts.montserrat(
                       fontSize: 12.sp,
                       color: AppColors.black,
                       fontWeight: FontWeight.w400,

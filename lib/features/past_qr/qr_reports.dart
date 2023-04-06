@@ -51,10 +51,16 @@ class _QrReportsState extends State<QrReports> {
             ),
           ),
           sizedBoxWithHeight(10),
-          Divider(color: AppColors.dividerColor, endIndent: 10.w, indent: 10.w),
+          Divider(
+            color: AppColors.dividerColor,
+            endIndent: 10.w,
+            indent: 10.w,
+          ),
           sizedBoxWithHeight(10),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            padding: EdgeInsets.symmetric(
+              horizontal: 20.w,
+            ),
             child: child,
           ),
         ],

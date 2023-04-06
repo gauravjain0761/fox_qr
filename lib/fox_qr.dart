@@ -1,5 +1,5 @@
-import 'package:fox/features/auth/logic/auth_controller.dart';
-import 'package:fox/shared/shared.dart';
+import 'features/auth/logic/auth_controller.dart';
+import 'shared/shared.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:fox/themes/themes.dart';
 import 'package:flutter/material.dart';

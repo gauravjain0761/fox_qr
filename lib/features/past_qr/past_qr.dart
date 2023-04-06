@@ -17,21 +17,19 @@ class _PastQrScreenState extends State<PastQrScreen> {
       appBar: const AppHeader(
         leftWidget: AppBackButton(),
         isDrawerNeeded: false,
-        title: 'Past QR',
+        title: 'Past Codes',
       ),
       backgroundColor: AppColors.appColor,
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: FocusScope.of(context).unfocus,
-          child: Padding(
-            padding: EdgeInsets.only(top: 32.h),
-            child: ListView.separated(
-              padding: EdgeInsets.symmetric(horizontal: 32.w),
-              itemCount: 3,
-              separatorBuilder: (_, __) => sizedBoxWithHeight(20),
-              itemBuilder: (_, index) => _renderListItem(),
-            ),
+      body: GestureDetector(
+        onTap: FocusScope.of(context).unfocus,
+        child: Padding(
+          padding: EdgeInsets.only(top: 32.h),
+          child: ListView.separated(
+            padding: EdgeInsets.symmetric(horizontal: 15.w),
+            itemCount: 3,
+            separatorBuilder: (_, __) => sizedBoxWithHeight(20),
+            itemBuilder: (_, index) => _renderListItem(),
           ),
         ),
       ),
@@ -44,7 +42,7 @@ class _PastQrScreenState extends State<PastQrScreen> {
           .pushNamed(GeneralRoutes.displayQRDetailsScreen),
       child: Container(
         height: 90.h,
-        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+        padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 16.h),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(12.r),
@@ -57,6 +55,7 @@ class _PastQrScreenState extends State<PastQrScreen> {
           ],
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             AppImage(
               Images.foxLogo,
@@ -64,16 +63,14 @@ class _PastQrScreenState extends State<PastQrScreen> {
               width: 60.r,
             ),
             sizedBoxWithWidth(10),
-            Flexible(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Flexible(
-                    child: Text(
-                      'Mandela Campaign QR',
-                      style:
-                          AppText.text14w600.copyWith(color: AppColors.black),
-                    ),
+                  Text(
+                    'Mandela Campaign QR',
+                    style: AppText.text14w600.copyWith(color: AppColors.black),
                   ),
                   sizedBoxWithHeight(4),
                   Text(
@@ -83,7 +80,6 @@ class _PastQrScreenState extends State<PastQrScreen> {
                 ],
               ),
             ),
-            const Spacer(),
             Icon(
               Icons.arrow_forward_ios,
               size: 20.r,

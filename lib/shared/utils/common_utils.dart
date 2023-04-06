@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fox/shared/shared.dart';
+import 'package:fox/shared/ui/page_not_found/page_not_found.dart';
+import 'package:fox/shared/utils/extensions/extensions.dart';
 
 class CommonUtils {
   CommonUtils._();

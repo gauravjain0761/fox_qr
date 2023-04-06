@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
+import 'package:fox/themes/app_text.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -31,10 +32,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   onClick: _handleOnTap,
                   label: 'Log In',
                   iconAlign: Alignment.centerRight,
-                  icon: AppImage(
-                    Images.arrowBackWhite,
-                    height: 16.h,
-                    width: 32.w,
+                  icon: Padding(
+                    padding: EdgeInsets.only(
+                      right: 15.w,
+                    ),
+                    child: AppImage(
+                      Images.arrowBackWhite,
+                      height: 16.h,
+                      width: 32.w,
+                    ),
                   ),
                 ),
                 sizedBoxWithHeight(24),
@@ -58,9 +64,21 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         sizedBoxWithHeight(50),
-        AppTextFormField(name: 'email'),
+        AppTextFormField(
+          name: 'email',
+          hintText: "email@address.foxtrot",
+          hintStyle: AppText.text15w400.copyWith(
+            color: AppColors.black,
+          ),
+        ),
         sizedBoxWithHeight(20),
-        AppTextFormField(name: 'password'),
+        AppTextFormField(
+          name: 'password',
+          hintText: "Password",
+          hintStyle: AppText.text15w400.copyWith(
+            color: AppColors.black,
+          ),
+        ),
         sizedBoxWithHeight(29),
         Text.rich(
           TextSpan(

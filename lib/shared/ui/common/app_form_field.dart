@@ -10,6 +10,7 @@ class AppTextFormField extends StatefulWidget {
   final TextStyle? style;
   final String? labelText;
   final String? hintText;
+  final TextStyle? hintStyle;
   final bool? alignLabelWithHint;
   final int? minLines;
   final int? maxLines;
@@ -25,6 +26,7 @@ class AppTextFormField extends StatefulWidget {
     this.style,
     this.labelText,
     this.hintText,
+    this.hintStyle,
     this.alignLabelWithHint,
     this.minLines,
     this.maxLines,
@@ -104,6 +106,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
         ),
         labelText: widget.labelText,
         hintText: widget.hintText,
+        hintStyle: widget.hintStyle,
         alignLabelWithHint: widget.alignLabelWithHint,
       ),
       minLines: widget.minLines,

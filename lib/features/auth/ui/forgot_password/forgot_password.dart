@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -24,16 +25,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 24.h),
             child: Column(
               children: [
-                const Spacer(),
+                sizedBoxWithHeight(130),
                 _renderForm(),
                 const Spacer(),
-                AppButton(
-                  border: Border.all(color: AppColors.black, width: 2.r),
-                  primaryColor: AppColors.white,
-                  highLightedTextColor: AppColors.black,
-                  textStyle: AppText.text20w600Black,
-                  onClick: _handleSend,
-                  label: 'Send',
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  child: AppButton(
+                    border: Border.all(color: AppColors.black, width: 2.r),
+                    primaryColor: AppColors.white,
+                    highLightedTextColor: AppColors.black,
+                    textStyle: AppText.text20w600Black,
+                    onClick: _handleSend,
+                    label: 'Send',
+                  ),
                 ),
               ],
             ),
@@ -48,7 +52,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       children: [
         Text(
           'Forgot Password',
-          style: TextStyle(
+          style: GoogleFonts.montserrat(
             fontSize: 25.sp,
             fontWeight: FontWeight.w700,
             color: AppColors.black,
@@ -56,16 +60,22 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         ),
         sizedBoxWithHeight(40),
         Text(
-          'Please enter your email address to receive an activation link',
+          'Please enter your email address to\nreceive an activation link',
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style: GoogleFonts.montserrat(
             fontSize: 15.sp,
             fontWeight: FontWeight.w600,
             color: AppColors.black,
           ),
         ),
         sizedBoxWithHeight(40),
-        AppTextFormField(name: 'email'),
+        AppTextFormField(
+          name: 'email',
+          hintText: "email@address.foxtrot",
+          hintStyle: AppText.text15w400.copyWith(
+            color: AppColors.black,
+          ),
+        ),
       ],
     );
   }

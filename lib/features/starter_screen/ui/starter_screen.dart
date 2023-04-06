@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class StarterScreen extends StatelessWidget {
   const StarterScreen({super.key});
@@ -36,7 +37,7 @@ class StarterScreen extends StatelessWidget {
                   sizedBoxWithHeight(68),
                   Text(
                     'GENERATE',
-                    style: TextStyle(
+                    style: GoogleFonts.montserrat(
                       fontSize: 45.sp,
                       color: AppColors.black,
                       fontWeight: FontWeight.w700,
@@ -44,7 +45,7 @@ class StarterScreen extends StatelessWidget {
                   ),
                   Text(
                     'QR CODES',
-                    style: TextStyle(
+                    style: GoogleFonts.montserrat(
                       fontSize: 35.sp,
                       color: AppColors.pinkColor,
                       fontWeight: FontWeight.w700,
@@ -53,7 +54,7 @@ class StarterScreen extends StatelessWidget {
                   sizedBoxWithHeight(23),
                   Text(
                     'Tap To Continue',
-                    style: TextStyle(
+                    style: GoogleFonts.montserrat(
                       fontSize: 12.sp,
                       color: AppColors.black,
                       fontWeight: FontWeight.w400,
