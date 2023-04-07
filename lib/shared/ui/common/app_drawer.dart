@@ -1,11 +1,10 @@
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:fox/routes/arguments/content_args.dart';
-import 'package:fox/shared/shared.dart';
-import '../../../features/premium/purchase_screen.dart';
+import 'package:fox/features/premium/purchase_screen.dart';
 import 'package:fox/routes/routes.dart';
+import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -55,7 +54,7 @@ class AppDrawer extends StatelessWidget {
                   height: 50,
                   onClick: () {},
                   label: 'Log Out',
-                  textStyle: GoogleFonts.montserrat(
+                  textStyle: TextStyle(
                       color: Colors.white,
                       fontSize: 15.sp,
                       fontWeight: FontWeight.w600),

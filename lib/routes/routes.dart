@@ -1,19 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:fox/features/auth/auth.dart';
-import 'package:fox/features/home_page/home_page.dart';
-import 'package:fox/features/premium/purchase_screen.dart';
-import 'package:fox/features/splash/ui/splash_screen.dart';
-
+import 'package:fox/features/home_page/widgets/create_qr_page.dart';
+import 'package:fox/features/past_qr/display_qr.dart';
+import 'package:fox/features/past_qr/past_qr.dart';
+import 'package:fox/features/splash/index.dart';
+import 'package:fox/features/starter_screen/ui/starter_screen.dart';
 import 'package:fox/routes/arguments/index.dart';
 import 'package:fox/shared/shared.dart';
 
 import 'package:flutter/material.dart';
-
+import 'package:fox/features/home_page/home_page.dart';
+import 'package:fox/features/premium/purchase_screen.dart';
 import 'package:fox/shared/ui/content_display/content_display.dart';
-
-import '../features/home_page/widgets/create_qr_page.dart';
-import '../features/past_qr/index.dart';
-import '../features/starter_screen/index.dart';
 
 part 'auth_routes.dart';
 part 'create_post_routes.dart';

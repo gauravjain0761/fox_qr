@@ -68,7 +68,7 @@ class _ContentScreenState extends State<ContentScreen> {
               children: [
                 sizedBoxWithHeight(10),
                 Text(
-                  "Terms & Conditions",
+                  widget.data.title,
                   style: AppText.text24w600.copyWith(
                     fontSize: 24.sp,
                   ),

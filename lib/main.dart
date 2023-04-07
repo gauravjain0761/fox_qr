@@ -1,7 +1,7 @@
-import 'fox_qr.dart';
+import 'package:fox/fox_qr.dart';
 import 'package:fox/routes/routes.dart';
-import 'shared/shared.dart';
 import 'package:flutter/material.dart';
+import 'package:fox/shared/shared.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 void main() async {

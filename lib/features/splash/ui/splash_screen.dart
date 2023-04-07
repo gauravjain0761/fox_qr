@@ -33,7 +33,7 @@ class SplashScreen extends StatelessWidget {
                   Text.rich(
                     TextSpan(
                       text: 'QR',
-                      style: GoogleFonts.montserrat(
+                      style: TextStyle(
                         color: AppColors.pinkColor,
                         fontSize: 48.sp,
                         fontWeight: FontWeight.w700,
@@ -41,7 +41,7 @@ class SplashScreen extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: ' FOX',
-                          style: GoogleFonts.montserrat(
+                          style: TextStyle(
                             color: AppColors.black,
                             fontSize: 48.sp,
                             fontWeight: FontWeight.w700,
@@ -53,7 +53,7 @@ class SplashScreen extends StatelessWidget {
                   const Spacer(),
                   Text(
                     'WELCOME',
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       fontSize: 35.sp,
                       color: AppColors.black,
                       fontWeight: FontWeight.w700,
@@ -62,7 +62,7 @@ class SplashScreen extends StatelessWidget {
                   sizedBoxWithHeight(26),
                   Text(
                     'Tap To Continue',
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       fontSize: 12.sp,
                       color: AppColors.black,
                       fontWeight: FontWeight.w400,

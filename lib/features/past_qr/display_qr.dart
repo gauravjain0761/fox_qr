@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fox/features/past_qr/qr_reports.dart';
+import 'package:fox/features/past_qr/index.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
 

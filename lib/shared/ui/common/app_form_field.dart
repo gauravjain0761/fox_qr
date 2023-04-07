@@ -106,7 +106,10 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
         ),
         labelText: widget.labelText,
         hintText: widget.hintText,
-        hintStyle: widget.hintStyle,
+        hintStyle: widget.hintStyle ??
+            AppText.text15w400.copyWith(
+              color: AppColors.black,
+            ),
         alignLabelWithHint: widget.alignLabelWithHint,
       ),
       minLines: widget.minLines,

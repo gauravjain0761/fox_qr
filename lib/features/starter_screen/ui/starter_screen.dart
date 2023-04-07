@@ -37,7 +37,7 @@ class StarterScreen extends StatelessWidget {
                   sizedBoxWithHeight(68),
                   Text(
                     'GENERATE',
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       fontSize: 45.sp,
                       color: AppColors.black,
                       fontWeight: FontWeight.w700,
@@ -45,7 +45,7 @@ class StarterScreen extends StatelessWidget {
                   ),
                   Text(
                     'QR CODES',
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       fontSize: 35.sp,
                       color: AppColors.pinkColor,
                       fontWeight: FontWeight.w700,
@@ -54,7 +54,7 @@ class StarterScreen extends StatelessWidget {
                   sizedBoxWithHeight(23),
                   Text(
                     'Tap To Continue',
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       fontSize: 12.sp,
                       color: AppColors.black,
                       fontWeight: FontWeight.w400,

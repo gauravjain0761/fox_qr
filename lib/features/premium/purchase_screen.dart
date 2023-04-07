@@ -16,11 +16,10 @@ class PurchaseScreen extends StatefulWidget {
 }
 
 class _PurchaseScreenState extends State<PurchaseScreen> {
-  late PageController controller;
+  PageController controller = PageController();
   @override
   void initState() {
     super.initState();
-    controller = PageController();
   }
 
   List<PlanModel> planmodel = [
@@ -63,7 +62,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
           "No Ads",
         ]),
   ];
-  late int selectedindex = 0;
+  int selectedindex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,7 +102,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                           Text.rich(
                             TextSpan(
                               text: 'With ',
-                              style: GoogleFonts.montserrat(
+                              style: TextStyle(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w500,
                                 color: AppColors.black,
@@ -111,7 +110,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                               children: [
                                 TextSpan(
                                   text: planmodel.elementAt(selectedindex).name,
-                                  style: GoogleFonts.montserrat(
+                                  style: TextStyle(
                                     color: AppColors.pinkColor,
                                     fontWeight: FontWeight.w700,
                                     fontSize: 12.sp,
@@ -119,7 +118,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                                 ),
                                 TextSpan(
                                   text: ' You Get :',
-                                  style: GoogleFonts.montserrat(
+                                  style: TextStyle(
                                     fontSize: 12.sp,
                                     fontWeight: FontWeight.w500,
                                     color: AppColors.black,
@@ -163,7 +162,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
         sizedBoxWithWidth(20),
         Text(
           planmodel.elementAt(selectedindex).features.elementAt(index),
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             fontSize: 15.sp,
             fontWeight: FontWeight.w600,
             color: AppColors.black,

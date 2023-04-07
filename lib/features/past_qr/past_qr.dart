@@ -21,15 +21,17 @@ class _PastQrScreenState extends State<PastQrScreen> {
       ),
       backgroundColor: AppColors.appColor,
       resizeToAvoidBottomInset: false,
-      body: GestureDetector(
-        onTap: FocusScope.of(context).unfocus,
-        child: Padding(
-          padding: EdgeInsets.only(top: 32.h),
-          child: ListView.separated(
-            padding: EdgeInsets.symmetric(horizontal: 15.w),
-            itemCount: 3,
-            separatorBuilder: (_, __) => sizedBoxWithHeight(20),
-            itemBuilder: (_, index) => _renderListItem(),
+      body: SafeArea(
+        child: GestureDetector(
+          onTap: FocusScope.of(context).unfocus,
+          child: Padding(
+            padding: EdgeInsets.only(top: 32.h),
+            child: ListView.separated(
+              padding: EdgeInsets.symmetric(horizontal: 15.w),
+              itemCount: 3,
+              separatorBuilder: (_, __) => sizedBoxWithHeight(20),
+              itemBuilder: (_, index) => _renderListItem(),
+            ),
           ),
         ),
       ),

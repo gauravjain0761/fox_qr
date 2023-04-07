@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../shared.dart';
+import 'package:fox/shared/shared.dart';
 
 extension StringExtension on String {
   /// Method used to precache the asset image into engine

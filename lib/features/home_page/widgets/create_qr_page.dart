@@ -1,13 +1,7 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:fox/shared/data/constants/colors.dart';
-import 'package:fox/shared/ui/ui.dart';
-import 'package:fox/shared/utils/utils.dart';
+import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
-
-import '../../../shared/shared.dart';
 
 class CreateQRPage extends StatefulWidget {
   final String qrtype;
@@ -33,8 +27,8 @@ class _CreateQRPageState extends State<CreateQRPage>
 
   @override
   void dispose() {
-    super.dispose();
     _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -70,9 +64,6 @@ class _CreateQRPageState extends State<CreateQRPage>
                         child: AppTextFormField(
                           name: "website",
                           hintText: "Enter url here",
-                          hintStyle: AppText.text15w400.copyWith(
-                            color: AppColors.black,
-                          ),
                         ),
                       )
                     ],

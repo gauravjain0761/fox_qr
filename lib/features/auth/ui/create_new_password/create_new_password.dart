@@ -31,7 +31,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
             padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 24.h),
             child: Column(
               children: [
-                sizedBoxWithHeight(100),
+                const Spacer(),
                 _renderForm(),
                 const Spacer(),
                 AppButton(onClick: () {}, label: 'Save'),
@@ -48,7 +48,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
       children: [
         Text(
           'Create New Password',
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             fontSize: 25.sp,
             fontWeight: FontWeight.w700,
             color: AppColors.black,
@@ -58,27 +58,27 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
         Text(
           'Create a new password\nfor your account',
           textAlign: TextAlign.center,
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             fontSize: 15.sp,
             fontWeight: FontWeight.w600,
             color: AppColors.black,
           ),
         ),
         sizedBoxWithHeight(40),
-        AppTextFormField(
+        const AppTextFormField(
           name: 'password',
           hintText: "Create A Password",
-          hintStyle: AppText.text15w400.copyWith(
-            color: AppColors.black,
-          ),
+          // hintStyle: AppText.text15w400.copyWith(
+          //   color: AppColors.black,
+          // ),
         ),
         sizedBoxWithHeight(20),
-        AppTextFormField(
+        const AppTextFormField(
           name: 'confirm_password',
           hintText: "Re-Enter Password",
-          hintStyle: AppText.text15w400.copyWith(
-            color: AppColors.black,
-          ),
+          // hintStyle: AppText.text15w400.copyWith(
+          //   color: AppColors.black,
+          // ),
         ),
       ],
     );
