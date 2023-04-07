@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fox/shared/shared.dart';
-import 'package:fox/themes/app_text.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class CreateNewPasswordScreen extends StatefulWidget {
   const CreateNewPasswordScreen({super.key});

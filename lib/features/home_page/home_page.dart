@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
@@ -14,26 +15,30 @@ class _HomePageState extends State<HomePage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   List<QrTypes> qrtypes = [
     QrTypes(
-      image: const Icon(
-        Icons.link,
+      image: SvgPicture.asset(
+        "assets/images/website.svg",
+        color: AppColors.white,
       ),
       title: "Website",
     ),
     QrTypes(
-      image: const Icon(
-        Icons.email_outlined,
+      image: SvgPicture.asset(
+        "assets/images/email.svg",
+        color: AppColors.white,
       ),
       title: "Email",
     ),
     QrTypes(
-      image: const Icon(
-        Icons.phone_android_outlined,
+      image: SvgPicture.asset(
+        "assets/images/whatsapp.svg",
+        color: AppColors.white,
       ),
       title: "Whatsapp",
     ),
     QrTypes(
-      image: const Icon(
-        Icons.location_on_outlined,
+      image: SvgPicture.asset(
+        "assets/images/location.svg",
+        color: AppColors.white,
       ),
       title: "Location",
     ),
@@ -44,21 +49,26 @@ class _HomePageState extends State<HomePage> {
       title: "Social Media",
     ),
     QrTypes(
-      image: const Icon(
-        Icons.wifi_sharp,
+      image: SvgPicture.asset(
+        "assets/images/wi-fi.svg",
+        color: AppColors.white,
       ),
       title: "Wi-Fi",
     ),
     QrTypes(
-      image: const Icon(
-        Icons.book,
+      image: SvgPicture.asset(
+        "assets/images/contact.svg",
+        color: AppColors.white,
       ),
+      //
       title: "Virtual Card",
     ),
     QrTypes(
-      image: const Icon(
-        Icons.calendar_month,
+      image: SvgPicture.asset(
+        "assets/images/event.svg",
+        color: AppColors.white,
       ),
+      //
       title: "Event",
     ),
   ];
@@ -141,7 +151,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _handleSend({required String qrtype}) {
+  void _handleSend({
+    required String qrtype,
+  }) {
     AppEnvironment.navigator
         .pushNamed(GeneralRoutes.createqr, arguments: qrtype);
   }
@@ -149,7 +161,7 @@ class _HomePageState extends State<HomePage> {
 
 class QrTypes {
   final String title;
-  final Icon image;
+  final Widget image;
   QrTypes({
     required this.image,
     required this.title,

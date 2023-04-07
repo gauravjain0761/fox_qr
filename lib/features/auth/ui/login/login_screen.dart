@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
-import 'package:fox/themes/app_text.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

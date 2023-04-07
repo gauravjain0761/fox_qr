@@ -116,7 +116,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           size: 20.h,
                           color: AppColors.black,
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                 ),
               ),
             ),
@@ -169,7 +169,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           size: 20.h,
                           color: AppColors.black,
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                 ),
               ),
             ),
