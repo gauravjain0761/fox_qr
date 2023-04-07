@@ -63,28 +63,19 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
         ),
         sizedBoxWithHeight(41),
-        AppTextFormField(
+        const AppTextFormField(
           name: 'email',
           hintText: "email@address.foxtrot",
-          hintStyle: AppText.text15w400.copyWith(
-            color: AppColors.black,
-          ),
         ),
         sizedBoxWithHeight(20),
-        AppTextFormField(
+        const AppTextFormField(
           name: 'password',
           hintText: "Create A Password",
-          hintStyle: AppText.text15w400.copyWith(
-            color: AppColors.black,
-          ),
         ),
         sizedBoxWithHeight(20),
-        AppTextFormField(
+        const AppTextFormField(
           name: 'confirm_password',
           hintText: "Re-Enter Password",
-          hintStyle: AppText.text15w400.copyWith(
-            color: AppColors.black,
-          ),
         ),
         sizedBoxWithHeight(40),
         Divider(
@@ -92,12 +83,9 @@ class _SignupScreenState extends State<SignupScreen> {
           height: 1.h,
         ),
         sizedBoxWithHeight(40),
-        AppTextFormField(
+        const AppTextFormField(
           name: 'username',
           hintText: "Username",
-          hintStyle: AppText.text15w400.copyWith(
-            color: AppColors.black,
-          ),
         ),
         sizedBoxWithHeight(120),
         Row(

@@ -64,20 +64,14 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         sizedBoxWithHeight(50),
-        AppTextFormField(
+        const AppTextFormField(
           name: 'email',
           hintText: "email@address.foxtrot",
-          hintStyle: AppText.text15w400.copyWith(
-            color: AppColors.black,
-          ),
         ),
         sizedBoxWithHeight(20),
-        AppTextFormField(
+        const AppTextFormField(
           name: 'password',
           hintText: "Password",
-          hintStyle: AppText.text15w400.copyWith(
-            color: AppColors.black,
-          ),
         ),
         sizedBoxWithHeight(29),
         Text.rich(
