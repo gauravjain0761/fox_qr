@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:fox/features/auth/auth.dart';
+import 'package:fox/features/home_page/widgets/create_qr_page.dart';
 import 'package:fox/features/past_qr/display_qr.dart';
 import 'package:fox/features/past_qr/past_qr.dart';
 import 'package:fox/features/splash/index.dart';

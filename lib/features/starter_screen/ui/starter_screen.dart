@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class StarterScreen extends StatelessWidget {
   const StarterScreen({super.key});

@@ -51,8 +51,13 @@ class AppDrawer extends StatelessWidget {
                 ),
                 const Spacer(),
                 AppButton(
+                  height: 50,
                   onClick: () {},
                   label: 'Log Out',
+                  textStyle: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w600),
                   primaryColor: AppColors.pinkColor,
                 ),
               ],
@@ -70,8 +75,6 @@ class AppDrawer extends StatelessWidget {
         children: [
           AppImage(
             drawerItems[index].icon,
-            width: 24.w,
-            height: 20.h,
           ),
           sizedBoxWithWidth(20),
           Text(

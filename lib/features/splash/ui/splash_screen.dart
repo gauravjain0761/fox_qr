@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -35,7 +36,7 @@ class SplashScreen extends StatelessWidget {
                       style: TextStyle(
                         color: AppColors.pinkColor,
                         fontSize: 48.sp,
-                        fontWeight: FontWeight.w800,
+                        fontWeight: FontWeight.w700,
                       ),
                       children: [
                         TextSpan(
@@ -43,7 +44,7 @@ class SplashScreen extends StatelessWidget {
                           style: TextStyle(
                             color: AppColors.black,
                             fontSize: 48.sp,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w700,
                           ),
                         )
                       ],

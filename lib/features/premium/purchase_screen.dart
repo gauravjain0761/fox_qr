@@ -1,14 +1,68 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:fox/features/premium/premium.dart';
+import 'package:fox/features/premium/premium_path_clipper.dart';
+import 'package:fox/models/plan_model.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class PurchaseScreen extends StatelessWidget {
+class PurchaseScreen extends StatefulWidget {
   const PurchaseScreen({super.key});
 
+  @override
+  State<PurchaseScreen> createState() => _PurchaseScreenState();
+}
+
+class _PurchaseScreenState extends State<PurchaseScreen> {
+  PageController controller = PageController();
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  List<PlanModel> planmodel = [
+    PlanModel(
+        codes: "Unlimited",
+        name: "Free",
+        price: "0,00",
+        features: Strings.whatUget),
+    PlanModel(
+        codes: "150 Codes",
+        name: "Premium Plus",
+        price: "15,00",
+        features: [
+          "Halftone And Full Colour Image",
+          "Tracking and Dashboard Access",
+          "12 Month Expiry",
+          "Multiple Content",
+          "No Ads",
+        ]),
+    PlanModel(
+        codes: "500 Codes",
+        name: "Premium Pro",
+        price: "30,00",
+        features: [
+          "Halftone And Full Colour Image",
+          "Tracking and Dashboard Access",
+          "12 Month Expiry",
+          "Multiple Content",
+          "No Ads",
+        ]),
+    PlanModel(
+        codes: "3000 Codes",
+        name: "Premium Ultra",
+        price: "100,00",
+        features: [
+          "Halftone And Full Colour Image",
+          "Tracking and Dashboard Access",
+          "12 Month Expiry",
+          "Multiple Content",
+          "No Ads",
+        ]),
+  ];
+  int selectedindex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,6 +77,7 @@ class PurchaseScreen extends StatelessWidget {
           child: ListView(
             padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 24.h),
             shrinkWrap: true,
+            primary: false,
             children: [
               Center(
                 child: Text(
@@ -32,29 +87,52 @@ class PurchaseScreen extends StatelessWidget {
                 ),
               ),
               sizedBoxWithHeight(36),
-              Text.rich(
-                TextSpan(
-                  text: 'With ',
-                  children: [
-                    TextSpan(
-                      text: 'Free',
-                      style: TextStyle(
-                        color: AppColors.pinkColor,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 12.sp,
-                      ),
-                    ),
-                    const TextSpan(text: ' You Get :'),
-                  ],
-                ),
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: AppColors.black,
-                  fontWeight: FontWeight.w600,
-                ),
+              SizedBox(
+                height: 250.h,
+                width: double.maxFinite,
+                child: PageView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: planmodel.length,
+                    controller: controller,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text.rich(
+                            TextSpan(
+                              text: 'With ',
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.black,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: planmodel.elementAt(selectedindex).name,
+                                  style: TextStyle(
+                                    color: AppColors.pinkColor,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 12.sp,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: ' You Get :',
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          sizedBoxWithHeight(24),
+                          _renderFeatureList(),
+                        ],
+                      );
+                    }),
               ),
-              sizedBoxWithHeight(24),
-              _renderFeatureList(),
               sizedBoxWithHeight(40),
               _renderPlanList(),
             ],
@@ -78,16 +156,14 @@ class PurchaseScreen extends StatelessWidget {
   Widget _renderFeature(int index) {
     return Row(
       children: [
-        Icon(
-          Icons.check,
-          color: AppColors.blueTickColor,
-          size: 24.r,
+        const AppImage(
+          "assets/images/done.svg",
         ),
-        sizedBoxWithWidth(24),
+        sizedBoxWithWidth(20),
         Text(
-          Strings.whatUget[index],
+          planmodel.elementAt(selectedindex).features.elementAt(index),
           style: TextStyle(
-            fontSize: 16.sp,
+            fontSize: 15.sp,
             fontWeight: FontWeight.w600,
             color: AppColors.black,
           ),
@@ -98,7 +174,7 @@ class PurchaseScreen extends StatelessWidget {
 
   Widget _renderPlanList() {
     return ListView.separated(
-      itemCount: 3,
+      itemCount: planmodel.length,
       shrinkWrap: true,
       padding: EdgeInsets.zero,
       physics: const NeverScrollableScrollPhysics(),
@@ -108,61 +184,89 @@ class PurchaseScreen extends StatelessWidget {
   }
 
   Widget _renderPlan(int index) {
-    return Container(
-      height: 90.h,
-      decoration: BoxDecoration(
-        color: AppColors.pinkColor,
-        border: Border.all(width: 4.r, color: AppColors.appColor),
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 25.r,
-            offset: Offset(0, 3.h),
-            color: AppColors.shadowColor,
-          )
-        ],
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: Stack(
-        children: [
-          ClipPath(
-            // TODO: pass length of string added by value and prefix
-            clipper: PremiumPathClipper(length: 9),
-            child: Container(
-              width: MediaQuery.of(AppEnvironment.ctx).size.width,
-              decoration: BoxDecoration(
-                color: AppColors.white.withOpacity(0.45),
-              ),
-            ),
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedindex = index;
+          controller.animateToPage(selectedindex,
+              duration: Duration(seconds: 1), curve: Curves.easeIn);
+        });
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            color: index == selectedindex
+                ? AppColors.blueTickColor
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(
+              12.r,
+            )),
+        padding: const EdgeInsets.all(4),
+        child: Container(
+          height: 80.h,
+          decoration: BoxDecoration(
+            color: AppColors.pinkColor,
+            borderRadius: BorderRadius.circular(12.r),
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 25.r,
+                offset: Offset(0, 3.h),
+                color: AppColors.shadowColor,
+              )
+            ],
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-            child: Row(
-              children: [
-                Text.rich(
-                  TextSpan(
-                    text: '\$0,00',
-                    children: [
-                      TextSpan(text: ' /yr', style: AppText.text12w400White),
-                    ],
+          child: Stack(
+            children: [
+              ClipPath(
+                // TODO: pass length of string added by value and prefix
+                clipper: PremiumPathClipper(
+                    length: planmodel.elementAt(index).price.length + 4),
+                child: Container(
+                  width: MediaQuery.of(AppEnvironment.ctx).size.width,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(
+                          12.r,
+                        ),
+                        bottomLeft: Radius.circular(
+                          12.r,
+                        )),
+                    color: AppColors.white.withOpacity(0.45),
                   ),
-                  style: AppText.text24w600White,
                 ),
-                const Spacer(),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+                child: Row(
                   children: [
-                    Text('Free', style: AppText.text16w700White),
-                    Text(
-                      'Unlimited',
-                      style: AppText.text16w400White,
+                    Text.rich(
+                      TextSpan(
+                        text: '\$${planmodel.elementAt(index).price}',
+                        children: [
+                          TextSpan(
+                              text: ' /yr', style: AppText.text12w400White),
+                        ],
+                      ),
+                      style: AppText.text24w600White,
+                    ),
+                    const Spacer(),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(planmodel.elementAt(index).name,
+                            style: AppText.text16w700White),
+                        Text(
+                          planmodel.elementAt(index).codes,
+                          style: AppText.text16w400White,
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -171,7 +275,7 @@ class PurchaseScreen extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 24.h),
       child: SizedBox(
-        height: 56.h,
+        height: 60.h,
         child: AppButton(
           border: Border.all(color: AppColors.black, width: 2.r),
           primaryColor: AppColors.white,

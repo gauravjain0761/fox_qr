@@ -1,5 +1,5 @@
-import 'package:fox/shared/shared.dart';
 import 'package:flutter/material.dart';
+import 'package:fox/shared/shared.dart';
 
 abstract class AppText {
   AppText._();
@@ -68,7 +68,7 @@ abstract class AppText {
 
   static TextStyle get text24w600 => TextStyle(
         color: AppColors.black,
-        fontSize: 24.sp,
+        fontSize: 18.sp,
         fontWeight: FontWeight.w600,
       );
 
@@ -115,7 +115,7 @@ abstract class AppText {
       );
   static TextStyle get text24w700 => TextStyle(
         color: AppColors.black,
-        fontSize: 24.sp,
+        fontSize: 25.sp,
         fontWeight: FontWeight.w700,
       );
   static TextStyle get text24w600White => TextStyle(
@@ -142,5 +142,31 @@ abstract class AppText {
         color: AppColors.black,
         fontSize: 60.sp,
         fontWeight: FontWeight.w600,
+      );
+  static TextStyle get text15w500black => TextStyle(
+        color: AppColors.black,
+        fontSize: 15.sp,
+        fontWeight: FontWeight.bold,
+      );
+
+  static TextStyle get text8w400 => TextStyle(
+        color: AppColors.black,
+        fontSize: 8.sp,
+        fontWeight: FontWeight.w400,
+      );
+  static TextStyle get text15w400 => TextStyle(
+        color: AppColors.textcolor,
+        fontWeight: FontWeight.w400,
+        fontSize: 15.sp,
+      );
+  static TextStyle get text17w600 => TextStyle(
+        color: AppColors.grey500,
+        fontSize: 17.sp,
+        fontWeight: FontWeight.w600,
+      );
+  static TextStyle get text10w400 => TextStyle(
+        color: AppColors.black,
+        fontSize: 10.sp,
+        fontWeight: FontWeight.w400,
       );
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fox/shared/shared.dart';
+import 'package:fox/themes/app_text.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CreateNewPasswordScreen extends StatefulWidget {
   const CreateNewPasswordScreen({super.key});
@@ -54,7 +56,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
         ),
         sizedBoxWithHeight(40),
         Text(
-          'Create a new password for your account',
+          'Create a new password\nfor your account',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 15.sp,
@@ -63,9 +65,21 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
           ),
         ),
         sizedBoxWithHeight(40),
-        AppTextFormField(name: 'password'),
+        const AppTextFormField(
+          name: 'password',
+          hintText: "Create A Password",
+          // hintStyle: AppText.text15w400.copyWith(
+          //   color: AppColors.black,
+          // ),
+        ),
         sizedBoxWithHeight(20),
-        AppTextFormField(name: 'confirm_password'),
+        const AppTextFormField(
+          name: 'confirm_password',
+          hintText: "Re-Enter Password",
+          // hintStyle: AppText.text15w400.copyWith(
+          //   color: AppColors.black,
+          // ),
+        ),
       ],
     );
   }

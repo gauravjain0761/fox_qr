@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
 
@@ -11,6 +12,56 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  List<QrTypes> qrtypes = [
+    QrTypes(
+      image: const Icon(
+        Icons.link,
+      ),
+      title: "Website",
+    ),
+    QrTypes(
+      image: const Icon(
+        Icons.email_outlined,
+      ),
+      title: "Email",
+    ),
+    QrTypes(
+      image: const Icon(
+        Icons.phone_android_outlined,
+      ),
+      title: "Whatsapp",
+    ),
+    QrTypes(
+      image: const Icon(
+        Icons.location_on_outlined,
+      ),
+      title: "Location",
+    ),
+    QrTypes(
+      image: const Icon(
+        Icons.favorite_border,
+      ),
+      title: "Social Media",
+    ),
+    QrTypes(
+      image: const Icon(
+        Icons.wifi_sharp,
+      ),
+      title: "Wi-Fi",
+    ),
+    QrTypes(
+      image: const Icon(
+        Icons.book,
+      ),
+      title: "Virtual Card",
+    ),
+    QrTypes(
+      image: const Icon(
+        Icons.calendar_month,
+      ),
+      title: "Event",
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -39,45 +90,68 @@ class _HomePageState extends State<HomePage> {
         sizedBoxWithHeight(20),
         Text(
           'QR Type',
-          style: AppText.text24w600.copyWith(color: AppColors.black),
+          style: AppText.text24w600.copyWith(
+            color: AppColors.black,
+          ),
         ),
         sizedBoxWithHeight(20),
         Expanded(
           child: ListView.builder(
             shrinkWrap: true,
-            itemCount: 16,
-            itemBuilder: (_, index) => _renderListItem(),
+            itemCount: qrtypes.length,
+            itemBuilder: (_, index) => _renderListItem(
+              index: index,
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _renderListItem() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 32.w, vertical: 8.h),
-      padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 24.w),
-      decoration: BoxDecoration(
-        color: AppColors.yellowColor,
-        borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(color: AppColors.black, width: 2.r),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Whatsapp',
-            style: AppText.text24w600.copyWith(
-              color: AppColors.black,
+  Widget _renderListItem({required int index}) {
+    return InkWell(
+      onTap: () {
+        _handleSend(qrtype: qrtypes.elementAt(index).title);
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 32.w, vertical: 8.h),
+        padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 24.w),
+        decoration: BoxDecoration(
+          color: AppColors.yellowColor,
+          borderRadius: BorderRadius.circular(18.r),
+          border: Border.all(color: AppColors.black, width: 2.r),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              qrtypes.elementAt(index).title,
+              style: AppText.text24w600.copyWith(
+                color: AppColors.black,
+              ),
             ),
-          ),
-          CircleAvatar(
-            radius: 24.r,
-            backgroundColor: AppColors.black,
-            child: const AppImage(Images.whatsAppIcon),
-          )
-        ],
+            CircleAvatar(
+              radius: 24.r,
+              backgroundColor: AppColors.black,
+              child: qrtypes.elementAt(index).image,
+            )
+          ],
+        ),
       ),
     );
   }
+
+  void _handleSend({required String qrtype}) {
+    AppEnvironment.navigator
+        .pushNamed(GeneralRoutes.createqr, arguments: qrtype);
+  }
+}
+
+class QrTypes {
+  final String title;
+  final Icon image;
+  QrTypes({
+    required this.image,
+    required this.title,
+  });
 }
