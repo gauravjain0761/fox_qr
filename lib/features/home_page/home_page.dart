@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
 
@@ -47,7 +48,19 @@ class _HomePageState extends State<HomePage> {
         Icons.wifi_sharp,
       ),
       title: "Wi-Fi",
-    )
+    ),
+    QrTypes(
+      image: const Icon(
+        Icons.book,
+      ),
+      title: "Virtual Card",
+    ),
+    QrTypes(
+      image: const Icon(
+        Icons.calendar_month,
+      ),
+      title: "Event",
+    ),
   ];
 
   @override
@@ -77,14 +90,18 @@ class _HomePageState extends State<HomePage> {
         sizedBoxWithHeight(20),
         Text(
           'QR Type',
-          style: AppText.text24w600.copyWith(color: AppColors.black),
+          style: AppText.text24w600.copyWith(
+            color: AppColors.black,
+          ),
         ),
         sizedBoxWithHeight(20),
         Expanded(
           child: ListView.builder(
             shrinkWrap: true,
             itemCount: qrtypes.length,
-            itemBuilder: (_, index) => _renderListItem(index: index),
+            itemBuilder: (_, index) => _renderListItem(
+              index: index,
+            ),
           ),
         ),
       ],
@@ -92,31 +109,41 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _renderListItem({required int index}) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 32.w, vertical: 8.h),
-      padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 24.w),
-      decoration: BoxDecoration(
-        color: AppColors.yellowColor,
-        borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(color: AppColors.black, width: 2.r),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            qrtypes.elementAt(index).title,
-            style: AppText.text24w600.copyWith(
-              color: AppColors.black,
+    return InkWell(
+      onTap: () {
+        _handleSend(qrtype: qrtypes.elementAt(index).title);
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 32.w, vertical: 8.h),
+        padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 24.w),
+        decoration: BoxDecoration(
+          color: AppColors.yellowColor,
+          borderRadius: BorderRadius.circular(18.r),
+          border: Border.all(color: AppColors.black, width: 2.r),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              qrtypes.elementAt(index).title,
+              style: AppText.text24w600.copyWith(
+                color: AppColors.black,
+              ),
             ),
-          ),
-          CircleAvatar(
-            radius: 24.r,
-            backgroundColor: AppColors.black,
-            child: qrtypes.elementAt(index).image,
-          )
-        ],
+            CircleAvatar(
+              radius: 24.r,
+              backgroundColor: AppColors.black,
+              child: qrtypes.elementAt(index).image,
+            )
+          ],
+        ),
       ),
     );
+  }
+
+  void _handleSend({required String qrtype}) {
+    AppEnvironment.navigator
+        .pushNamed(GeneralRoutes.createqr, arguments: qrtype);
   }
 }
 

@@ -80,7 +80,9 @@ class GeneralRoutes {
         child = const DisplayQRDetailsScreen();
         break;
       case GeneralRoutes.createqr:
-        child = const CreateQRPage();
+        child = CreateQRPage(
+          qrtype: args as String,
+        );
         break;
       case GeneralRoutes.imageEditor:
         if (CommonUtils.hasInvalidArgs<Uint8List>(args!)) {

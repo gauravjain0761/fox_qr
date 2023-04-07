@@ -3,7 +3,6 @@ import 'package:fox/shared/shared.dart';
 
 import '../../../../themes/app_text.dart';
 
-
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
@@ -64,15 +63,42 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
         ),
         sizedBoxWithHeight(41),
-        AppTextFormField(name: 'email'),
+        AppTextFormField(
+          name: 'email',
+          hintText: "email@address.foxtrot",
+          hintStyle: AppText.text15w400.copyWith(
+            color: AppColors.black,
+          ),
+        ),
         sizedBoxWithHeight(20),
-        AppTextFormField(name: 'password'),
+        AppTextFormField(
+          name: 'password',
+          hintText: "Create A Password",
+          hintStyle: AppText.text15w400.copyWith(
+            color: AppColors.black,
+          ),
+        ),
         sizedBoxWithHeight(20),
-        AppTextFormField(name: 'confirm_password'),
+        AppTextFormField(
+          name: 'confirm_password',
+          hintText: "Re-Enter Password",
+          hintStyle: AppText.text15w400.copyWith(
+            color: AppColors.black,
+          ),
+        ),
         sizedBoxWithHeight(40),
-        Divider(color: AppColors.greyColor.withOpacity(0.12), height: 1.h),
+        Divider(
+          color: AppColors.greyColor.withOpacity(0.12),
+          height: 1.h,
+        ),
         sizedBoxWithHeight(40),
-        AppTextFormField(name: 'username'),
+        AppTextFormField(
+          name: 'username',
+          hintText: "Username",
+          hintStyle: AppText.text15w400.copyWith(
+            color: AppColors.black,
+          ),
+        ),
         sizedBoxWithHeight(120),
         Row(
           children: [
