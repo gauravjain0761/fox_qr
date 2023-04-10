@@ -36,6 +36,9 @@ lib/generated_plugin_registrant.dart
 
 # Symbolication related
 app.*.symbols
+.dart_tool/
+build/
+pubspec.lock  # Except for application package
 
 # Obfuscation related
 app.*.map.json
