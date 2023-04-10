@@ -1,7 +1,9 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class CreateQRPage extends StatefulWidget {
   final String qrtype;
@@ -16,6 +18,14 @@ class CreateQRPage extends StatefulWidget {
 
 class _CreateQRPageState extends State<CreateQRPage>
     with SingleTickerProviderStateMixin {
+  late GoogleMapController mapController;
+
+  final LatLng _center = const LatLng(45.521563, -122.677433);
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
+
   List<bool> isSelected = [true, false, false];
   late TabController _tabController;
   @override
@@ -118,10 +128,33 @@ class _CreateQRPageState extends State<CreateQRPage>
                                     )
                                   ],
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
+                        ColorPicker(
+                          enableAlpha: true,
+                          hexInputBar: false,
+                          portraitOnly: false,
+                          displayThumbColor: true,
+                          labelTypes: [],
+
+                          pickerColor: Colors.red, //default color
+                          onColorChanged: (Color color) {
+                            //on color picked
+                            print(color);
+                          },
+                        ),
+                        // SizedBox(
+                        //   height: 400.h,
+                        //   child: GoogleMap(
+                        //     onMapCreated: _onMapCreated,
+                        //     initialCameraPosition: CameraPosition(
+                        //       target: _center,
+                        //       zoom: 11.0,
+                        //     ),
+                        //   ),
+                        // ),
                         Padding(
                           padding: EdgeInsets.symmetric(
                             horizontal: 20.w,
