@@ -6,8 +6,9 @@ class AppImage extends StatelessWidget {
   final String image;
   final double? width;
   final double? height;
+  final Color? color;
 
-  const AppImage(this.image, {this.width, this.height, super.key});
+  const AppImage(this.image, {this.width, this.height, super.key, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +32,14 @@ class AppImage extends StatelessWidget {
         image,
         width: width,
         height: height,
+        color: color,
       );
     }
     return CachedNetworkImage(
       imageUrl: image,
       width: width,
       height: height,
+      color: color,
     );
   }
 
@@ -46,6 +49,7 @@ class AppImage extends StatelessWidget {
         image,
         width: width,
         height: height,
+        color: color,
       );
     }
 
@@ -53,6 +57,7 @@ class AppImage extends StatelessWidget {
       image: AssetImage(image),
       width: width,
       height: height,
+      color: color,
     );
   }
 }

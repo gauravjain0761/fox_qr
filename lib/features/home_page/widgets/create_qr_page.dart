@@ -1,9 +1,11 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:fox/shared/shared.dart';
+import 'package:fox/shared/utils/color_picker.dart' as cp;
 import 'package:fox/themes/app_text.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'shrink_wrapping_tab_bar_view.dart';
 
 class CreateQRPage extends StatefulWidget {
   final String qrtype;
@@ -19,6 +21,16 @@ class CreateQRPage extends StatefulWidget {
 class _CreateQRPageState extends State<CreateQRPage>
     with SingleTickerProviderStateMixin {
   late GoogleMapController mapController;
+  List<String> icons = [
+    "assets/images/insta.svg",
+    "assets/images/twitter.svg",
+    "assets/images/messenger.svg",
+    "assets/images/linkedin.svg",
+    "assets/images/facebook.svg",
+    "assets/images/tiktok.svg",
+    "assets/images/google.svg",
+    "assets/images/spotify.png",
+  ];
 
   final LatLng _center = const LatLng(45.521563, -122.677433);
 
@@ -26,6 +38,7 @@ class _CreateQRPageState extends State<CreateQRPage>
     mapController = controller;
   }
 
+  int selectedicon = 0;
   List<bool> isSelected = [true, false, false];
   late TabController _tabController;
   @override
@@ -38,6 +51,7 @@ class _CreateQRPageState extends State<CreateQRPage>
   bool hidenetwork = true;
   String securityType = "None";
   int selectedbutton = 0;
+  bool iscolorpickervisible = false;
 
   @override
   void dispose() {
@@ -49,209 +63,244 @@ class _CreateQRPageState extends State<CreateQRPage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffoldColor,
-      body: CustomScrollView(
-        slivers: [
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                AppHeader(
-                  color: AppColors.yellowColor,
-                  leftWidget: AppImage(
-                    Images.arrowBackBlackFilled,
-                    height: 50.r,
-                    width: 50.r,
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  AppHeader(
+                    color: AppColors.yellowColor,
+                    leftWidget: AppImage(
+                      Images.arrowBackBlackFilled,
+                      height: 50.r,
+                      width: 50.r,
+                    ),
                   ),
-                ),
-                Column(
-                  children: [
-                    _renderQrContainer(),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 36.w,
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              sizedBoxWithHeight(20),
-                              Text(
-                                "QR Image Size",
-                                style: AppText.text15w500black,
-                              ),
-                              sizedBoxWithHeight(30),
-                              _qrTabButtons(),
-                              sizedBoxWithHeight(30),
-                              Text(
-                                "Custom",
-                                style: AppText.text15w400,
-                              ),
-                              sizedBoxWithHeight(20),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  right: 90.w,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Flexible(
-                                      child: AppTextFormField(
-                                        name: "custom size",
-                                        hintText: "0000",
-                                        hintStyle: AppText.text15w400,
-                                      ),
-                                    ),
-                                    sizedBoxWithWidth(11),
-                                    Text(
-                                      "px",
-                                      style: AppText.text15w400.copyWith(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 12.sp,
-                                      ),
-                                    ),
-                                    sizedBoxWithWidth(21),
-                                    Text(
-                                      "By",
-                                      style: AppText.text15w400.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 12.sp,
-                                      ),
-                                    ),
-                                    sizedBoxWithWidth(20),
-                                    Text(
-                                      "0000 px",
-                                      style: AppText.text15w400.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        ColorPicker(
-                          enableAlpha: true,
-                          hexInputBar: false,
-                          portraitOnly: false,
-                          displayThumbColor: true,
-                          labelTypes: [],
+                  ListView(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.zero,
 
-                          pickerColor: Colors.red, //default color
-                          onColorChanged: (Color color) {
-                            //on color picked
-                            print(color);
-                          },
+                    physics: const ScrollPhysics(),
+                    primary: false,
+                    //  mainAxisSize: MainAxisSize.min,
+                    // crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _renderQrContainer(),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 36.w,
                         ),
-                        // SizedBox(
-                        //   height: 400.h,
-                        //   child: GoogleMap(
-                        //     onMapCreated: _onMapCreated,
-                        //     initialCameraPosition: CameraPosition(
-                        //       target: _center,
-                        //       zoom: 11.0,
-                        //     ),
-                        //   ),
-                        // ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 20.w,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            sizedBoxWithHeight(20),
+                            Text(
+                              "QR Image Size",
+                              style: AppText.text15w500black,
+                            ),
+                            sizedBoxWithHeight(30),
+                            _qrTabButtons(),
+                            sizedBoxWithHeight(30),
+                            Text(
+                              "Custom",
+                              style: AppText.text15w400,
+                            ),
+                            sizedBoxWithHeight(20),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                right: 90.w,
+                              ),
+                              child: Row(
+                                children: [
+                                  Flexible(
+                                    child: AppTextFormField(
+                                      name: "custom size",
+                                      hintText: "0000",
+                                      hintStyle: AppText.text15w400,
+                                    ),
+                                  ),
+                                  sizedBoxWithWidth(11),
+                                  Text(
+                                    "px",
+                                    style: AppText.text15w400.copyWith(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 12.sp,
+                                    ),
+                                  ),
+                                  sizedBoxWithWidth(21),
+                                  Text(
+                                    "By",
+                                    style: AppText.text15w400.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12.sp,
+                                    ),
+                                  ),
+                                  sizedBoxWithWidth(20),
+                                  Text(
+                                    "0000 px",
+                                    style: AppText.text15w400.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      sizedBoxWithHeight(30),
+                      Visibility(
+                        visible: widget.qrtype == "Location" ? true : false,
+                        child: SizedBox(
+                          height: 400.h,
+                          child: GoogleMap(
+                            zoomControlsEnabled: false,
+                            onMapCreated: _onMapCreated,
+                            initialCameraPosition: CameraPosition(
+                              target: _center,
+                              zoom: 11.0,
+                            ),
                           ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              sizedBoxWithHeight(30),
-                              Divider(
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20.w,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Visibility(
+                              visible:
+                                  widget.qrtype == "Location" ? false : true,
+                              child: Divider(
                                 thickness: 0.8,
                                 color: AppColors.textcolor,
                               ),
-                              sizedBoxWithHeight(30),
-                              _qrDisplayImage(),
-                              sizedBoxWithHeight(33),
-                              _qrChooseImage(),
-                              sizedBoxWithHeight(14),
-                              Text(
-                                "Maximum size 5 MB",
-                                style: AppText.text10w400,
-                              ),
-                              sizedBoxWithHeight(39),
-                              _qrTabBar(),
-                            ],
-                          ),
-                        ),
-                        // TabBarView(
-                        //   physics: const NeverScrollableScrollPhysics(),
-                        //   controller: _tabController,
-                        //   children: [
-                        //     // first tab bar view widget
-                        //     Container(
-                        //       height: 50.h,
-                        //       decoration: BoxDecoration(
-                        //         borderRadius: BorderRadius.circular(10.r),
-                        //         color: AppColors.yellowColor,
-                        //       ),
-                        //       padding: EdgeInsets.symmetric(
-                        //         horizontal: 24.w,
-                        //         // vertical: 20.h,
-                        //       ),
-                        //       margin: EdgeInsets.symmetric(
-                        //         horizontal: 36.w,
-                        //       ),
-                        //       child: Row(
-                        //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //         children: [
-                        //           Text(
-                        //             "Colour",
-                        //             style: AppText.text17w600.copyWith(
-                        //               color: AppColors.black,
-                        //             ),
-                        //           ),
-                        //           Icon(
-                        //             Icons.add,
-                        //             color: AppColors.black,
-                        //           )
-                        //         ],
-                        //       ),
-                        //     ),
-                        //     // second tab bar view widget
-                        //     sizedBoxWithHeight(0),
-                        //   ],
-                        // ),
-                        sizedBoxWithHeight(30),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const AppImage(
-                              "assets/images/premium.svg",
                             ),
-                            sizedBoxWithWidth(10),
+                            sizedBoxWithHeight(30),
+                            _qrDisplayImage(),
+                            sizedBoxWithHeight(33),
+                            _qrChooseImage(),
+                            sizedBoxWithHeight(14),
                             Text(
-                              "Get Premium And Track Analytics!",
-                              style: AppText.text15w500black.copyWith(
-                                color: AppColors.black.withOpacity(0.4),
-                                decoration: TextDecoration.underline,
-                              ),
-                            )
+                              "Maximum size 5 MB",
+                              style: AppText.text10w400,
+                            ),
+                            sizedBoxWithHeight(39),
+                            _qrTabBar(),
                           ],
                         ),
-                        sizedBoxWithHeight(30),
-                        Divider(
-                          thickness: 0.8,
-                          color: AppColors.textcolor,
-                        ),
-                        sizedBoxWithHeight(30),
-                        _qrSubmit(),
-                        sizedBoxWithHeight(10),
-                      ],
-                    ),
-                  ],
-                )
-              ],
-            ),
-          )
-        ],
+                      ),
+                      ShrinkWrappingTabBarView(
+                        tabController: _tabController,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.r),
+                              color: AppColors.yellowColor,
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 24.w,
+                              vertical: 15.h,
+                              // vertical: 20.h,
+                            ),
+                            margin: EdgeInsets.symmetric(
+                                  horizontal: 36.w,
+                                ) +
+                                EdgeInsets.only(
+                                  top: 40.h,
+                                ),
+                            child: Column(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      iscolorpickervisible =
+                                          !iscolorpickervisible;
+                                    });
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Colour",
+                                        style: AppText.text17w600.copyWith(
+                                          color: AppColors.black,
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.add,
+                                        color: AppColors.black,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: iscolorpickervisible,
+                                  child: sizedBoxWithHeight(35),
+                                ),
+                                Visibility(
+                                  visible: iscolorpickervisible,
+                                  child: cp.ColorPicker(
+                                    enableAlpha: false,
+                                    pickerHsvColor:
+                                        HSVColor.fromColor(Colors.white),
+
+                                    portraitOnly: false,
+                                    displayThumbColor: false,
+
+                                    labelTypes: const [],
+                                    //  paletteType: PaletteType.hueWheel,
+
+                                    pickerColor: Colors.red, //default color
+                                    onColorChanged: (Color color) {
+                                      //on color picked
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // second tab bar view widget
+                          sizedBoxWithHeight(0),
+                        ],
+                      ),
+                      sizedBoxWithHeight(30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const AppImage(
+                            "assets/images/premium.svg",
+                          ),
+                          sizedBoxWithWidth(10),
+                          Text(
+                            "Get Premium And Track Analytics!",
+                            style: AppText.text15w500black.copyWith(
+                              color: AppColors.black.withOpacity(0.4),
+                              decoration: TextDecoration.underline,
+                            ),
+                          )
+                        ],
+                      ),
+                      sizedBoxWithHeight(30),
+                      Divider(
+                        thickness: 0.8,
+                        color: AppColors.textcolor,
+                      ),
+                      sizedBoxWithHeight(30),
+                      _qrSubmit(),
+                      sizedBoxWithHeight(10),
+                    ],
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -601,6 +650,60 @@ class _CreateQRPageState extends State<CreateQRPage>
               hintText: "IG Profile Link",
             ),
           ),
+          sizedBoxWithHeight(20),
+          GridView.builder(
+              shrinkWrap: true,
+              itemCount: icons.length,
+              primary: false,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                mainAxisSpacing: 10.h,
+                crossAxisSpacing: 10.w,
+              ),
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () {
+                    setState(() {
+                      selectedicon = index;
+                    });
+                  },
+                  child: Container(
+                    height: 69.h,
+                    width: 69.w,
+                    decoration: BoxDecoration(
+                      color: index == selectedicon
+                          ? AppColors.black
+                          : AppColors.yellowColor,
+                      borderRadius: BorderRadius.circular(10.r),
+                      boxShadow: [
+                        index == selectedicon
+                            ? const BoxShadow()
+                            : BoxShadow(
+                                color: AppColors.dropshadow,
+                                spreadRadius: 0,
+                                blurRadius: 10,
+                                offset: const Offset(
+                                  0,
+                                  3,
+                                ),
+                              )
+                      ],
+                    ),
+                    child: Center(
+                      child: AppImage(
+                        icons.elementAt(
+                          index,
+                        ),
+                        height: 38.h,
+                        width: 38.w,
+                        color: index == selectedicon
+                            ? AppColors.white
+                            : AppColors.black,
+                      ),
+                    ),
+                  ),
+                );
+              }),
           sizedBoxWithHeight(36),
         ],
       );
@@ -630,7 +733,7 @@ class _CreateQRPageState extends State<CreateQRPage>
                   color: AppColors.black,
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               InkWell(
                 onTap: () {
                   setState(() {
@@ -657,7 +760,7 @@ class _CreateQRPageState extends State<CreateQRPage>
                             size: 20.h,
                             color: AppColors.white,
                           )
-                        : SizedBox(),
+                        : const SizedBox(),
                   ),
                 ),
               ),
