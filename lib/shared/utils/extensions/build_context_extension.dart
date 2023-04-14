@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 
 extension BuildContextExtension on BuildContext {
   TextTheme get textTheme => Theme.of(this).textTheme;
@@ -76,16 +78,16 @@ extension BuildContextExtension on BuildContext {
   Future<File?> pickFile({
     FileType pickingType = FileType.media,
     List<String>? extensions,
+    ImageSource source = ImageSource.camera,
   }) async {
     try {
-      var paths = (await FilePicker.platform.pickFiles(
-        type: pickingType,
-        allowedExtensions: extensions,
-      ))
-          ?.files;
+      final xPath = await ImagePicker.platform.getImage(
+        source: source,
+      );
+      if (xPath != null) {
+        final paths = File(xPath.path);
 
-      if (paths != null && paths.isNotEmpty) {
-        return File(paths.first.path!);
+        return File(paths.path);
       } else {
         Logger.logMsg(this, 'No file selected.');
         return null;
@@ -121,7 +123,8 @@ extension BuildContextExtension on BuildContext {
             children: [
               const AppPill(),
               sizedBoxWithHeight(16),
-              Text(Strings.selectOne, style: AppText.text16w600),
+              Text(Strings.selectOne,
+                  style: AppText.text16w600.copyWith(color: AppColors.black)),
               sizedBoxWithHeight(16),
               Divider(thickness: 2.h),
               sizedBoxWithHeight(8),
@@ -148,11 +151,11 @@ extension BuildContextExtension on BuildContext {
     );
   }
 
-  Future<Uint8List?> launchImageEditor({required File imageData}) async {
-    // final data = imageData.readAsBytesSync();
-    // final result = await AppEnvironment.navigator
-    //     .pushNamed(GeneralRoutes.imageEditor, arguments: data);
-    // return result as Uint8List?;
+  Future<File?> launchImageEditor({required File imageData}) async {
+    final croppedFile =
+        await ImageCropper().cropImage(sourcePath: imageData.path);
+    if (croppedFile != null) return File(croppedFile.path);
+    return null;
   }
 
   void showAlertDialog({
