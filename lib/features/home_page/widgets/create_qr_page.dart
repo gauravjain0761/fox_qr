@@ -1,7 +1,13 @@
+import 'dart:io';
+
 import 'package:dotted_border/dotted_border.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:fox/features/auth/auth.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class CreateQRPage extends StatefulWidget {
   final String qrtype;
@@ -18,10 +24,10 @@ class _CreateQRPageState extends State<CreateQRPage>
     with SingleTickerProviderStateMixin {
   List<bool> isSelected = [true, false, false];
   late TabController _tabController;
+  ValueNotifier<File?> _fileData = ValueNotifier<File?>(null);
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
-
     super.initState();
   }
 
@@ -36,15 +42,20 @@ class _CreateQRPageState extends State<CreateQRPage>
     return Scaffold(
       backgroundColor: AppColors.yellowColor,
       appBar: AppHeader(
-        leftWidget: AppImage(
-          Images.arrowBackBlackFilled,
-          height: 50.r,
-          width: 50.r,
+        leftWidget: GestureDetector(
+          onTap: () {
+            AppEnvironment.navigator.pop();
+          },
+          child: AppImage(
+            Images.arrowBackBlackFilled,
+            height: 50.r,
+            width: 50.r,
+          ),
         ),
       ),
       body: SingleChildScrollView(
         child: SizedBox(
-          height: 1039.h,
+          // height: 1039.h,
           child: SafeArea(
             child: Column(
               children: [
@@ -256,8 +267,8 @@ class _CreateQRPageState extends State<CreateQRPage>
                             ),
                             sizedBoxWithHeight(30),
                             Container(
-                              height: 241.h,
-                              width: 241.w,
+                              height: 241.r,
+                              width: 241.r,
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
                                 color: AppColors.white,
@@ -265,33 +276,75 @@ class _CreateQRPageState extends State<CreateQRPage>
                                   10.r,
                                 ),
                               ),
-                              child: DottedBorder(
-                                strokeWidth: 3, //thickness of dash/dots
-                                dashPattern: const [10, 10],
-                                color: AppColors.bordercolor,
-                                child: Center(
-                                    child: Text(
-                                  "No Image",
-                                  style: AppText.text17w600,
-                                )),
-                              ),
+                              child: ValueListenableBuilder<File?>(
+                                  valueListenable: _fileData,
+                                  builder: (context, data, __) {
+                                    return data != null
+                                        ? AppImage(
+                                            data.path,
+                                            height: 241.r,
+                                            width: 241.r,
+                                          )
+                                        : DottedBorder(
+                                            strokeWidth:
+                                                3, //thickness of dash/dots
+                                            dashPattern: const [10, 10],
+                                            color: AppColors.bordercolor,
+                                            child: Center(
+                                              child: Text(
+                                                "No Image",
+                                                style: AppText.text17w600,
+                                              ),
+                                            ));
+                                  }),
                             ),
                             sizedBoxWithHeight(33),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 20.h,
-                                horizontal: 35.w,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(
-                                  30.r,
+                            GestureDetector(
+                              onTap: () {
+                                context.showImagePickerDialog(
+                                    firstCtaTitle: 'Camera',
+                                    onFirstCta: () async {
+                                      AppEnvironment.navigator.pop();
+                                      final result = await context.pickFile(
+                                          pickingType: FileType.image,
+                                          source: ImageSource.camera);
+                                      if (result != null) {
+                                        final image =
+                                            await context.launchImageEditor(
+                                                imageData: result);
+                                        _fileData.value = (image);
+                                      }
+                                    },
+                                    onSecondCta: () async {
+                                      AppEnvironment.navigator.pop();
+                                      final result = await context.pickFile(
+                                          pickingType: FileType.image,
+                                          source: ImageSource.gallery);
+                                      if (result != null) {
+                                        final image =
+                                            await context.launchImageEditor(
+                                                imageData: result);
+                                        _fileData.value = (image);
+                                      }
+                                    },
+                                    secondCtaTitle: 'Gallery');
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 20.h,
+                                  horizontal: 35.w,
                                 ),
-                              ),
-                              child: Text(
-                                "Choose Image",
-                                style: AppText.text17w600.copyWith(
-                                  color: AppColors.black,
+                                decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                  borderRadius: BorderRadius.circular(
+                                    30.r,
+                                  ),
+                                ),
+                                child: Text(
+                                  "Choose Image",
+                                  style: AppText.text17w600.copyWith(
+                                    color: AppColors.black,
+                                  ),
                                 ),
                               ),
                             ),
@@ -383,21 +436,23 @@ class _CreateQRPageState extends State<CreateQRPage>
                       //   ),
                       // ),
                       sizedBoxWithHeight(30),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          AppImage(
-                            "assets/images/premium.svg",
-                          ),
-                          sizedBoxWithWidth(10),
-                          Text(
-                            "Get Premium And Track Analytics!",
-                            style: AppText.text15w500black.copyWith(
-                              color: AppColors.black.withOpacity(0.4),
-                              decoration: TextDecoration.underline,
+                      Flexible(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            AppImage(
+                              "assets/images/premium.svg",
                             ),
-                          )
-                        ],
+                            sizedBoxWithWidth(10),
+                            Text(
+                              "Get Premium And Track Analytics!",
+                              style: AppText.text15w500black.copyWith(
+                                color: AppColors.black.withOpacity(0.4),
+                                decoration: TextDecoration.underline,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                       sizedBoxWithHeight(30),
                       Divider(
@@ -435,7 +490,7 @@ class _CreateQRPageState extends State<CreateQRPage>
                           ],
                         ),
                       ),
-                      sizedBoxWithHeight(10),
+                      sizedBoxWithHeight(30),
                     ],
                   ),
                 ),

@@ -42,6 +42,7 @@ dependencies:
   form_field_validator: ^1.1.0
   get_it: ^7.2.0
   google_fonts: ^3.0.1
+  image_cropper: ^3.0.2
   image_picker: ^0.8.5+3
   internet_connection_checker: ^0.0.1+4
   provider: ^6.0.3

@@ -16,6 +16,7 @@ class _LightTheme {
       primary: AppColors.appColor,
       secondary: AppColors.appColor,
     ),
+    primaryTextTheme: GoogleFonts.montserratTextTheme(),
     toggleableActiveColor: AppColors.appColor,
     appBarTheme: AppBarTheme(color: AppColors.white),
     scaffoldBackgroundColor: AppColors.appColor,
