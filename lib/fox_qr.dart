@@ -1,7 +1,9 @@
+
 import 'package:fox/features/auth/logic/auth_controller.dart';
 import 'package:fox/features/auth/logic/login_controller.dart';
 import 'package:fox/features/auth/logic/register_controller.dart';
 import 'package:fox/features/home_page/logic/home_controller.dart';
+
 import 'package:fox/shared/shared.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:fox/themes/themes.dart';
@@ -9,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+
+import 'features/auth/auth.dart';
 
 class FoxQrApp extends StatefulWidget {
   const FoxQrApp({super.key});
@@ -31,9 +35,7 @@ class _FoxQrAppState extends State<FoxQrApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => getIt<AuthController>()),
-        ChangeNotifierProvider(create: (_) => getIt<RegisterController>()),
-        ChangeNotifierProvider(create: (_) => getIt<LoginController>()),
-        ChangeNotifierProvider(create: (_) => getIt<HomeController>()),
+        ChangeNotifierProvider(create: (_) => GetIt.I<CreateQrController>()),
       ],
       child: ValueListenableBuilder(
         valueListenable: AppEnvironment.appTheme,
@@ -73,5 +75,6 @@ class _FoxQrAppState extends State<FoxQrApp> {
     getIt.registerSingleton(HomeController());
 
     getIt.registerSingleton(AuthController());
+    getIt.registerSingleton(CreateQrController());
   }
 }

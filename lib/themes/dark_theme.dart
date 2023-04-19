@@ -56,6 +56,14 @@ class _DarkTheme {
       },
     ),
     textTheme: GoogleFonts.montserratTextTheme(),
+
+    colorScheme: const ColorScheme.light().copyWith(
+      primary: AppColors.appColor,
+      secondary: AppColors.appColor,
+    ),
+    primaryTextTheme: GoogleFonts.montserratTextTheme(),
+    toggleableActiveColor: AppColors.appColor,
+
     appBarTheme: AppBarTheme(color: AppColors.white),
     scaffoldBackgroundColor: AppColors.scaffoldColor,
     focusColor: AppColors.greyColor.withOpacity(0.12),
@@ -115,12 +123,6 @@ class _DarkTheme {
         return null;
       }),
     ),
-    colorScheme: const ColorScheme.light()
-        .copyWith(
-          primary: AppColors.appColor,
-          secondary: AppColors.appColor,
-        )
-        .copyWith(background: AppColors.white)
-        .copyWith(error: AppColors.errorColor),
+
   );
 }

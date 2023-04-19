@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -16,6 +18,14 @@ class AppImage extends StatelessWidget {
   }
 
   Widget showImage(String image, {double? width, double? height}) {
+    if (image.startsWith('/')) {
+      return Image.file(
+        File(image),
+        width: width,
+        height: height,
+        fit: BoxFit.fill,
+      );
+    }
     if (image.contains('http')) {
       return _showNetworkImage(
         image,
