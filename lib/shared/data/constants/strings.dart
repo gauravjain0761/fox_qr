@@ -91,4 +91,7 @@ class Strings {
     "Url Content Point Only",
     'Contains Ads'
   ];
+
+  static const usertoken = "usertoken";
+  static const isskipped = "isSkipped";
 }

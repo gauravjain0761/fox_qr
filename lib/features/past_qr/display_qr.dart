@@ -25,8 +25,14 @@ class _DisplayQRDetailsScreenState extends State<DisplayQRDetailsScreen> {
             children: [
               sizedBoxWithHeight(32),
               Center(
-                child: Card(
-                  color: AppColors.white,
+                child: Container(
+                  decoration: BoxDecoration(color: AppColors.white, boxShadow: [
+                    BoxShadow(
+                      color: AppColors.dropshadow,
+                      spreadRadius: 2,
+                      blurRadius: 10,
+                    )
+                  ]),
                   child: AppImage(
                     Images.foxLogo,
                     height: 150.r,

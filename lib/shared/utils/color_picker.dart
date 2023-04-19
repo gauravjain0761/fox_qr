@@ -211,32 +211,36 @@ class _ColorPickerState extends State<ColorPicker> {
                     width: double.infinity,
                     child: sliderByPaletteType(),
                   ),
+                  Transform.translate(
+                    offset: const Offset(10, -15),
+                    child: Theme(
+                      data: ThemeData(
+                        primaryColor: Colors.red,
+                        hintColor: Colors.green,
+                        disabledColor: Colors.black,
+                      ),
+                      child: ColorPickerInput(
+                        currentHsvColor.toColor(),
+                        (Color color) {
+                          setState(() =>
+                              currentHsvColor = HSVColor.fromColor(color));
+                          widget.onColorChanged(currentHsvColor.toColor());
+                          if (widget.onHsvColorChanged != null) {
+                            widget.onHsvColorChanged!(currentHsvColor);
+                          }
+                        },
+                        enableAlpha: true,
+                        disable: true,
+                        embeddedText: false,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
           ],
         ),
-        Theme(
-          data: ThemeData(
-            primaryColor: Colors.red,
-            hintColor: Colors.green,
-            disabledColor: Colors.black,
-          ),
-          child: ColorPickerInput(
-            currentHsvColor.toColor(),
-            (Color color) {
-              setState(() => currentHsvColor = HSVColor.fromColor(color));
-              widget.onColorChanged(currentHsvColor.toColor());
-              if (widget.onHsvColorChanged != null) {
-                widget.onHsvColorChanged!(currentHsvColor);
-              }
-            },
-            enableAlpha: true,
-            disable: true,
-            embeddedText: false,
-          ),
-        ),
-        const SizedBox(height: 20.0),
+        const SizedBox(height: 10.0),
       ],
     );
   }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -11,6 +14,8 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  final _formKey = GlobalKey<FormBuilderState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,39 +52,51 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   Widget _renderForm() {
-    return Column(
-      children: [
-        Text(
-          'Forgot Password',
-          style: TextStyle(
-            fontSize: 25.sp,
-            fontWeight: FontWeight.w700,
-            color: AppColors.black,
+    return FormBuilder(
+      key: _formKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      child: Column(
+        children: [
+          Text(
+            'Forgot Password',
+            style: GoogleFonts.montserrat(
+              fontSize: 25.sp,
+              fontWeight: FontWeight.w700,
+              color: AppColors.black,
+            ),
           ),
-        ),
-        sizedBoxWithHeight(40),
-        Text(
-          'Please enter your email address to\nreceive an activation link',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 15.sp,
-            fontWeight: FontWeight.w600,
-            color: AppColors.black,
+          sizedBoxWithHeight(40),
+          Text(
+            'Please enter your email address to\nreceive an activation link',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.montserrat(
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w600,
+              color: AppColors.black,
+            ),
           ),
-        ),
-        sizedBoxWithHeight(40),
-        AppTextFormField(
-          name: 'email',
-          hintText: "email@address.foxtrot",
-          hintStyle: AppText.text15w400.copyWith(
-            color: AppColors.black,
+          sizedBoxWithHeight(40),
+          AppTextFormField(
+            name: 'email',
+            hintText: "email@address.foxtrot",
+            validator: FormBuilderValidators.compose(
+              [
+                FormBuilderValidators.required(),
+                FormBuilderValidators.email(),
+              ],
+            ),
+            hintStyle: AppText.text15w400.copyWith(
+              color: AppColors.black,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   void _handleSend() {
-    AppEnvironment.navigator.pushNamed(AuthRoutes.createNewPasswordScreen);
+    if (_formKey.currentState!.validate()) {
+      AppEnvironment.navigator.pushNamed(AuthRoutes.createNewPasswordScreen);
+    }
   }
 }

@@ -102,7 +102,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                           Text.rich(
                             TextSpan(
                               text: 'With ',
-                              style: TextStyle(
+                              style: GoogleFonts.montserrat(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w500,
                                 color: AppColors.black,
@@ -110,7 +110,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                               children: [
                                 TextSpan(
                                   text: planmodel.elementAt(selectedindex).name,
-                                  style: TextStyle(
+                                  style: GoogleFonts.montserrat(
                                     color: AppColors.pinkColor,
                                     fontWeight: FontWeight.w700,
                                     fontSize: 12.sp,
@@ -118,7 +118,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                                 ),
                                 TextSpan(
                                   text: ' You Get :',
-                                  style: TextStyle(
+                                  style: GoogleFonts.montserrat(
                                     fontSize: 12.sp,
                                     fontWeight: FontWeight.w500,
                                     color: AppColors.black,
@@ -162,7 +162,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
         sizedBoxWithWidth(20),
         Text(
           planmodel.elementAt(selectedindex).features.elementAt(index),
-          style: TextStyle(
+          style: GoogleFonts.montserrat(
             fontSize: 15.sp,
             fontWeight: FontWeight.w600,
             color: AppColors.black,
@@ -189,7 +189,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
         setState(() {
           selectedindex = index;
           controller.animateToPage(selectedindex,
-              duration: Duration(seconds: 1), curve: Curves.easeIn);
+              duration: const Duration(seconds: 1), curve: Curves.easeIn);
         });
       },
       child: Container(

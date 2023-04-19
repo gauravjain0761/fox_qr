@@ -1,24 +1,51 @@
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:fox/features/auth/logic/login_controller.dart';
 import 'package:fox/routes/arguments/content_args.dart';
 import 'package:fox/features/premium/purchase_screen.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class AppDrawer extends StatelessWidget {
+class AppDrawer extends StatefulWidget {
   const AppDrawer({super.key});
+
+  @override
+  State<AppDrawer> createState() => _AppDrawerState();
+}
+
+class _AppDrawerState extends State<AppDrawer> {
+  bool isuserskippedlogin = false;
+  Future isuserskipped() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final bool isskipped = prefs.getBool(Strings.isskipped) ?? false;
+    setState(() {
+      isuserskippedlogin = isskipped;
+    });
+  }
+
+  @override
+  void initState() {
+    isuserskipped();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      elevation: 0,
+      shadowColor: Colors.transparent,
+      surfaceTintColor: Colors.black,
       width: 280.w,
       backgroundColor: AppColors.white.withOpacity(0.89),
       child: ClipRRect(
         child: BackdropFilter(
           filter: ui.ImageFilter.blur(
-            sigmaX: 5,
-            sigmaY: 5,
+            sigmaX: -5,
+            sigmaY: 9,
           ),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 24.h),
@@ -51,10 +78,20 @@ class AppDrawer extends StatelessWidget {
                 ),
                 const Spacer(),
                 AppButton(
-                  height: 50,
-                  onClick: () {},
-                  label: 'Log Out',
-                  textStyle: TextStyle(
+                  //   height: 50,
+                  onClick: () {
+                    if (isuserskippedlogin) {
+                      AppEnvironment.navigator
+                          .pushNamed(AuthRoutes.loginScreen);
+                    } else {
+                      Provider.of<LoginController>(context, listen: false)
+                          .douserlogout(
+                        context: context,
+                      );
+                    }
+                  },
+                  label: isuserskippedlogin ? 'Log In' : "Log Out",
+                  textStyle: GoogleFonts.montserrat(
                       color: Colors.white,
                       fontSize: 15.sp,
                       fontWeight: FontWeight.w600),

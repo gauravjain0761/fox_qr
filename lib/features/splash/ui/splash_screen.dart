@@ -14,10 +14,14 @@ class SplashScreen extends StatelessWidget {
         onTap: _handleOnTap,
         child: Stack(
           children: [
-            const AppImage(Images.backgroundPinkSplash),
+            const AppImage(
+              Images.backgroundPinkSplash,
+            ),
             const Align(
               alignment: Alignment.bottomLeft,
-              child: AppImage(Images.backgroundYellowSplash),
+              child: AppImage(
+                Images.backgroundYellowSplash,
+              ),
             ),
             SizedBox(
               width: double.infinity,
@@ -33,7 +37,7 @@ class SplashScreen extends StatelessWidget {
                   Text.rich(
                     TextSpan(
                       text: 'QR',
-                      style: TextStyle(
+                      style: GoogleFonts.montserrat(
                         color: AppColors.pinkColor,
                         fontSize: 48.sp,
                         fontWeight: FontWeight.w700,
@@ -41,7 +45,7 @@ class SplashScreen extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: ' FOX',
-                          style: TextStyle(
+                          style: GoogleFonts.montserrat(
                             color: AppColors.black,
                             fontSize: 48.sp,
                             fontWeight: FontWeight.w700,
@@ -53,7 +57,7 @@ class SplashScreen extends StatelessWidget {
                   const Spacer(),
                   Text(
                     'WELCOME',
-                    style: TextStyle(
+                    style: GoogleFonts.montserrat(
                       fontSize: 35.sp,
                       color: AppColors.black,
                       fontWeight: FontWeight.w700,
@@ -62,7 +66,7 @@ class SplashScreen extends StatelessWidget {
                   sizedBoxWithHeight(26),
                   Text(
                     'Tap To Continue',
-                    style: TextStyle(
+                    style: GoogleFonts.montserrat(
                       fontSize: 12.sp,
                       color: AppColors.black,
                       fontWeight: FontWeight.w400,
@@ -79,6 +83,8 @@ class SplashScreen extends StatelessWidget {
   }
 
   void _handleOnTap() {
-    AppEnvironment.navigator.pushNamed(GeneralRoutes.starterScreen);
+    AppEnvironment.navigator.pushReplacementNamed(
+      GeneralRoutes.starterScreen,
+    );
   }
 }

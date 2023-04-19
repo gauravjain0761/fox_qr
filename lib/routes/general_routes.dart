@@ -81,7 +81,7 @@ class GeneralRoutes {
         break;
       case GeneralRoutes.createqr:
         child = CreateQRPage(
-          qrtype: args as String,
+          qrtype: args as QrType,
         );
         break;
       case GeneralRoutes.imageEditor:
