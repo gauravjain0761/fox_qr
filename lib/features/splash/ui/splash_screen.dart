@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rive/rive.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -12,6 +13,10 @@ class SplashScreen extends StatelessWidget {
     return Scaffold(
       body: GestureDetector(
         onTap: _handleOnTap,
+        // child: const RiveAnimation.asset(
+        //   'assets/images/qrfox_Landing_Screen.riv',
+        //   fit: BoxFit.fill,
+        // ),
         child: Stack(
           children: [
             const AppImage(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rive/rive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StarterScreen extends StatefulWidget {
@@ -12,36 +13,16 @@ class StarterScreen extends StatefulWidget {
 }
 
 class _StarterScreenState extends State<StarterScreen> {
-  // final Pay _payClient = Pay({
-  //   PayProvider.google_pay: PaymentConfiguration.fromJsonString(
-  //     '{"provider": "google_pay","data": { "environment": "TEST","apiVersion": 2,"apiVersionMinor": 0,"allowedPaymentMethods": [{"type": "CARD","tokenizationSpecification": { "type": "PAYMENT_GATEWAY"},"parameters": {"allowedCardNetworks": [    "VISA","MASTERCARD"],"allowedAuthMethods": ["PAN_ONLY","CRYPTOGRAM_3DS" ],"billingAddressRequired": true,"billingAddressParameters": {"format": "FULL","phoneNumberRequired": true}} }  ], "merchantInfo": {"merchantId": "1234567889987654","merchantName": "Test Business"},"transactionInfo": {"countryCode": "IN","currencyCode": "INR"}}}',
-  //   ),
-  // });
-  // void onGooglePayPressed() async {
-  //   await _payClient.showPaymentSelector(
-  //     PayProvider.google_pay,
-  //     [
-  //       const PaymentItem(amount: "10"),
-  //     ],
-  //   ).onError((error, stackTrace) {
-  //     print(error.toString());
-  //     return {};
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: GestureDetector(
           onTap: _handleOnTap,
-
-          // Google Pay Integration
-          // child: RawGooglePayButton(
-          //   onPressed: onGooglePayPressed,
-          //   type: GooglePayButtonType.pay,
-          // )
-
+          // child: const RiveAnimation.asset(
+          //   'assets/images/qrfox_Info_Screen.riv',
+          //   fit: BoxFit.fill,
+          // ),
           child: Stack(
             children: [
               const Align(

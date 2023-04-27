@@ -2,15 +2,11 @@ import 'package:fox/fox_qr.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:fox/shared/shared.dart';
-import 'package:fox/storeconfig.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  StoreConfig(
-    store: Store.googlePlay,
-    apiKey: "",
-  );
+ 
 
   InternetConnectionChecker().onStatusChange.listen((status) {
     switch (status) {

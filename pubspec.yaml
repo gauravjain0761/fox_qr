@@ -42,6 +42,7 @@ dependencies:
   fluttertoast: ^8.0.9
   form_builder_validators: ^8.3.0
   gallery_saver: ^2.3.2
+  geolocator: ^9.0.2
   get_it: ^7.2.0
   google_fonts: ^3.0.1
   google_maps_flutter: ^2.2.5
@@ -53,6 +54,7 @@ dependencies:
   pay: ^1.1.0
   provider: ^6.0.3
   purchases_flutter: ^4.11.2
+  rive: ^0.10.4
   shared_preferences: ^2.1.0
   syncfusion_flutter_charts: ^21.1.37
   url_launcher: ^6.1.5

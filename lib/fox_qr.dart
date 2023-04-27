@@ -1,4 +1,3 @@
-
 import 'package:fox/features/auth/logic/auth_controller.dart';
 import 'package:fox/features/auth/logic/login_controller.dart';
 import 'package:fox/features/auth/logic/register_controller.dart';
@@ -35,7 +34,10 @@ class _FoxQrAppState extends State<FoxQrApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => getIt<AuthController>()),
-        ChangeNotifierProvider(create: (_) => GetIt.I<CreateQrController>()),
+        ChangeNotifierProvider(create: (_) => getIt<LoginController>()),
+        ChangeNotifierProvider(create: (_) => getIt<HomeController>()),
+        ChangeNotifierProvider(create: (_) => getIt<RegisterController>()),
+        // ChangeNotifierProvider(create: (_) => GetIt.I<CreateQrController>()),
       ],
       child: ValueListenableBuilder(
         valueListenable: AppEnvironment.appTheme,
@@ -75,6 +77,6 @@ class _FoxQrAppState extends State<FoxQrApp> {
     getIt.registerSingleton(HomeController());
 
     getIt.registerSingleton(AuthController());
-    getIt.registerSingleton(CreateQrController());
+    // getIt.registerSingleton(CreateQrController());
   }
 }

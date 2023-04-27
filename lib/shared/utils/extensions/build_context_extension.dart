@@ -10,7 +10,6 @@ import 'package:image_cropper/image_cropper.dart';
 
 import 'package:image_picker/image_picker.dart';
 
-
 extension BuildContextExtension on BuildContext {
   TextTheme get textTheme => Theme.of(this).textTheme;
 
@@ -80,7 +79,7 @@ extension BuildContextExtension on BuildContext {
   Future<File?> pickFile({
     FileType pickingType = FileType.media,
     List<String>? extensions,
-    ImageSource source = ImageSource.camera,
+    ImageSource source = ImageSource.gallery,
   }) async {
     try {
       final xPath = await ImagePicker.platform.getImage(
@@ -103,15 +102,13 @@ extension BuildContextExtension on BuildContext {
   Future<CroppedFile> cropImage(File imageFile) async {
     CroppedFile? croppedFile = await ImageCropper().cropImage(
       sourcePath: imageFile.path,
-      aspectRatioPresets: [
-        CropAspectRatioPreset.original,
-      ],
+      aspectRatioPresets: [CropAspectRatioPreset.square],
       uiSettings: [
         AndroidUiSettings(
           toolbarTitle: 'Crop Image',
           toolbarColor: AppColors.black,
           toolbarWidgetColor: AppColors.white,
-          initAspectRatio: CropAspectRatioPreset.original,
+          initAspectRatio: CropAspectRatioPreset.square,
           lockAspectRatio: false,
         ),
         IOSUiSettings(
