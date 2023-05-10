@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -14,12 +14,31 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  final _formKey = GlobalKey<FormBuilderState>();
+  final GlobalKey<FormState> _formKey =
+      GlobalKey<FormState>(debugLabel: 'forgot');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppHeader(leftWidget: AppBackButton()),
+      appBar: AppHeader(
+        leftWidget: InkWell(
+          onTap: () {
+            AppEnvironment.navigator.pop();
+          },
+          child: AppImage(
+            Images.arrowBackBlackFilled,
+            height: 40.r,
+            width: 40.r,
+          ),
+        ),
+        height: 70.h,
+        onDrawerTap: () async {
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setBool(Strings.isskipped, true).then((value) {
+            AppEnvironment.navigator.pushNamed(GeneralRoutes.homePageScreen);
+          });
+        },
+      ),
       backgroundColor: AppColors.white,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -52,7 +71,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   Widget _renderForm() {
-    return FormBuilder(
+    return Form(
       key: _formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(
@@ -79,12 +98,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           AppTextFormField(
             name: 'email',
             hintText: "email@address.foxtrot",
-            validator: FormBuilderValidators.compose(
-              [
-                FormBuilderValidators.required(),
-                FormBuilderValidators.email(),
-              ],
-            ),
+            validator: (value) {
+              if (isValidEmail(value!)) {
+                return null;
+              } else {
+                return "Please Enter Valid Email";
+              }
+            },
             hintStyle: AppText.text15w400.copyWith(
               color: AppColors.black,
             ),

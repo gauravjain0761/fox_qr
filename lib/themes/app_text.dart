@@ -170,4 +170,10 @@ abstract class AppText {
         fontSize: 10.sp,
         fontWeight: FontWeight.w500,
       );
+
+  static TextStyle get text13w600 => GoogleFonts.montserrat(
+        color: AppColors.bluecolor,
+        fontSize: 13.sp,
+        fontWeight: FontWeight.normal,
+      );
 }

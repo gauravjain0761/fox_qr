@@ -37,8 +37,8 @@ class _AppDrawerState extends State<AppDrawer> {
   Widget build(BuildContext context) {
     return Drawer(
       elevation: 0,
-      shadowColor: Colors.transparent,
-      surfaceTintColor: Colors.black,
+      // shadowColor: Colors.transparent,
+      // surfaceTintColor: Colors.black,
       width: 280.w,
       backgroundColor: AppColors.white.withOpacity(0.89),
       child: ClipRRect(

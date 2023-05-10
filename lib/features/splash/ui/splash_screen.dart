@@ -65,7 +65,7 @@ class SplashScreen extends StatelessWidget {
                     style: GoogleFonts.montserrat(
                       fontSize: 35.sp,
                       color: AppColors.black,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   sizedBoxWithHeight(26),

@@ -71,7 +71,7 @@ class GeneralRoutes {
         child = const PurchaseScreen();
         break;
       case GeneralRoutes.homePageScreen:
-        child = const HomePage();
+        child = HomePage();
         break;
       case GeneralRoutes.pastQrScreen:
         child = const PastQrScreen();

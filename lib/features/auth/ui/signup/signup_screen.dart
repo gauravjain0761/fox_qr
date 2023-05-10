@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
+
 import 'package:fox/features/auth/logic/register_controller.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../routes/routes.dart';
 import '../../../../themes/app_text.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -22,151 +23,184 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  final GlobalKey<FormState> formKey =
+      GlobalKey<FormState>(debugLabel: '_register');
+  @override
   Widget build(BuildContext context) {
     final registercontroller = Provider.of<RegisterController>(context);
 
-    return Scaffold(
-      appBar: const AppHeader(),
-      backgroundColor: AppColors.white,
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: FocusScope.of(context).unfocus,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 24.h),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                sizedBoxWithHeight(22),
-                _renderForm(registercontroller),
-                const Spacer(),
+    return WillPopScope(
+      onWillPop: () async {
+        formKey.currentState!.reset();
+        registercontroller.emailController.text = "";
+        registercontroller.password.text = '';
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppHeader(
+          height: 70.h,
+          onDrawerTap: () async {
+            final SharedPreferences prefs =
+                await SharedPreferences.getInstance();
+            prefs.setBool(Strings.isskipped, true).then((value) {
+              formKey.currentState!.reset();
 
-                Row(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        registercontroller.changetnc();
-                      },
-                      child: Container(
-                        height: 25.h,
-                        width: 25.w,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(
-                            7.r,
-                          ),
-                          border: Border.all(
-                            color: AppColors.black,
-                            width: 2,
-                          ),
-                        ),
-                        child: Center(
-                          child: registercontroller.tncchecked
-                              ? Icon(
-                                  Icons.check,
-                                  size: 20.h,
-                                  color: AppColors.black,
-                                )
-                              : const SizedBox(),
-                        ),
-                      ),
-                    ),
-                    sizedBoxWithWidth(18),
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: "I agree to the ",
-                            style: AppText.text12w400,
-                          ),
-                          TextSpan(
-                            text: "Terms and Conditions",
-                            style: AppText.text12w400.copyWith(
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline,
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                sizedBoxWithHeight(20),
-                Row(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        registercontroller.changepp();
-                      },
-                      child: Container(
-                        height: 25.h,
-                        width: 25.w,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(
-                            7.r,
-                          ),
-                          border: Border.all(
-                            color: AppColors.black,
-                            width: 2,
-                          ),
-                        ),
-                        child: Center(
-                          child: registercontroller.ppchecked
-                              ? Icon(
-                                  Icons.check,
-                                  size: 20.h,
-                                  color: AppColors.black,
-                                )
-                              : const SizedBox(),
-                        ),
-                      ),
-                    ),
-                    sizedBoxWithWidth(18),
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: "I agree to the ",
-                            style: AppText.text12w400,
-                          ),
-                          TextSpan(
-                            text: "Privacy Policy",
-                            style: AppText.text12w400.copyWith(
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline,
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                sizedBoxWithHeight(20),
-
-                // TODO: add app check
-
-                AppButton(
-                  onClick: () {
-                    if (!registercontroller.tncchecked) {
-                      context
-                          .showSnackBar("Please Accept Terms and Conditions");
-                    } else if (!registercontroller.ppchecked) {
-                      context.showSnackBar("Please Accept Privacy Policy");
-                    } else if (registercontroller.formKey.currentState!
-                        .validate()) {
-                      registercontroller.douserRegistration(context: context);
-                    }
-                  },
-                  label: 'Create Account',
-                  iconAlign: Alignment.centerRight,
-                  icon: AppImage(
-                    Images.arrowBackWhite,
-                    height: 16.h,
-                    width: 32.w,
+              registercontroller.emailController.text = "";
+              registercontroller.password.text = '';
+              AppEnvironment.navigator.pushNamed(GeneralRoutes.homePageScreen);
+            });
+          },
+        ),
+        backgroundColor: AppColors.white,
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(
+          child: GestureDetector(
+            onTap: FocusScope.of(context).unfocus,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 32.w,
+                vertical: 24.h,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  sizedBoxWithHeight(22),
+                  _renderForm(
+                    registercontroller,
                   ),
-                ),
-              ],
+                  const Spacer(),
+
+                  Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          registercontroller.changetnc();
+                        },
+                        child: Container(
+                          height: 25.h,
+                          width: 25.w,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(
+                              7.r,
+                            ),
+                            border: Border.all(
+                              color: AppColors.black,
+                              width: 2,
+                            ),
+                          ),
+                          child: Center(
+                            child: registercontroller.tncchecked
+                                ? Icon(
+                                    Icons.check,
+                                    size: 20.h,
+                                    color: AppColors.black,
+                                  )
+                                : const SizedBox(),
+                          ),
+                        ),
+                      ),
+                      sizedBoxWithWidth(18),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "I agree to the ",
+                              style: AppText.text12w400,
+                            ),
+                            TextSpan(
+                              text: "Terms and Conditions",
+                              style: AppText.text12w400.copyWith(
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  sizedBoxWithHeight(20),
+                  Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          registercontroller.changepp();
+                        },
+                        child: Container(
+                          height: 25.h,
+                          width: 25.w,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(
+                              7.r,
+                            ),
+                            border: Border.all(
+                              color: AppColors.black,
+                              width: 2,
+                            ),
+                          ),
+                          child: Center(
+                            child: registercontroller.ppchecked
+                                ? Icon(
+                                    Icons.check,
+                                    size: 20.h,
+                                    color: AppColors.black,
+                                  )
+                                : const SizedBox(),
+                          ),
+                        ),
+                      ),
+                      sizedBoxWithWidth(18),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "I agree to the ",
+                              style: AppText.text12w400,
+                            ),
+                            TextSpan(
+                              text: "Privacy Policy",
+                              style: AppText.text12w400.copyWith(
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  sizedBoxWithHeight(20),
+
+                  // TODO: add app check
+
+                  AppButton(
+                    onClick: () {
+                      if (!registercontroller.tncchecked) {
+                        context
+                            .showSnackBar("Please Accept Terms and Conditions");
+                      } else if (!registercontroller.ppchecked) {
+                        context.showSnackBar("Please Accept Privacy Policy");
+                      } else if (formKey.currentState!.validate()) {
+                        registercontroller.douserRegistration(
+                            context: context, formkey: formKey);
+                      }
+                    },
+                    label: 'Create Account',
+                    iconAlign: Alignment.centerRight,
+                    icon: AppImage(
+                      Images.arrowBackWhite,
+                      height: 16.h,
+                      width: 32.w,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -175,9 +209,8 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget _renderForm(RegisterController controller) {
-    return FormBuilder(
-      key: controller.formKey,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+    return Form(
+      key: formKey,
       child: Column(
         children: [
           Text(
@@ -190,30 +223,95 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
           sizedBoxWithHeight(41),
           AppTextFormField(
-            validator: FormBuilderValidators.compose(
-              [
-                FormBuilderValidators.required(),
-                FormBuilderValidators.email(),
-              ],
-            ),
+            suffixIcon: const SizedBox(),
+            validator: (value) {
+              if (isValidEmail(value!)) {
+                return null;
+              } else {
+                return "Please Enter Valid Email";
+              }
+            },
             name: 'email',
             controller: controller.emailController,
             hintText: "email@address.foxtrot",
           ),
           sizedBoxWithHeight(20),
-          AppTextFormField(
+          TextFormField(
             controller: controller.password,
-            validator: FormBuilderValidators.compose(
-              [
-                FormBuilderValidators.required(),
-                FormBuilderValidators.minLength(8),
-              ],
+            textAlign: TextAlign.center,
+            validator: (value) {
+              if (value!.length < 8) {
+                return "Minimum 8 Characters required";
+              } else if (!value.contains(
+                RegExp("(?=.*?[A-Za-z])"),
+              )) {
+                return "Minimum 1 alphabet Required";
+              } else if (!value.contains(RegExp("(?=.*?[0-9])"))) {
+                return "Minimum 1 Digit Required";
+              } else if (!value.contains(RegExp("(?=.*?[!@#\$&*~])"))) {
+                return "Minimum 1 Special Character Required";
+              } else {
+                return null;
+              }
+            },
+            style: GoogleFonts.montserrat(
+              fontSize: 15.sp,
+              color: AppColors.black,
+              fontWeight: FontWeight.w400,
             ),
-            name: 'password',
-            hintText: "Create A Password",
+            cursorColor: AppColors.black,
+            obscureText: controller.ispasswordvisible,
+            decoration: InputDecoration(
+              counterText: "",
+              contentPadding: EdgeInsets.symmetric(vertical: 10.h),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.r),
+                borderSide: BorderSide(
+                  color: AppColors.greyColor.withOpacity(0.12),
+                  width: 1.r,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.r),
+                borderSide: BorderSide(
+                  color: AppColors.greyColor.withOpacity(0.12),
+                  width: 1.r,
+                ),
+              ),
+              suffixIcon: InkWell(
+                onTap: () {
+                  controller.changepasswordvisiblity();
+                },
+                child: Icon(
+                  controller.ispasswordvisible
+                      ? Icons.remove_red_eye
+                      : Icons.visibility_off_rounded,
+                  color: AppColors.greyColor,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.r),
+                borderSide: BorderSide(
+                  color: AppColors.greyColor.withOpacity(0.12),
+                  width: 1.r,
+                ),
+              ),
+              disabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.r),
+                borderSide: BorderSide(
+                  color: AppColors.greyColor.withOpacity(0.12),
+                  width: 1.r,
+                ),
+              ),
+              hintText: "Create A Password",
+              hintStyle: AppText.text15w400.copyWith(
+                color: AppColors.black,
+              ),
+            ),
           ),
+
           sizedBoxWithHeight(20),
-          AppTextFormField(
+          TextFormField(
             validator: (val) {
               if (val == null) {
                 return 'Please Enter Password';
@@ -223,9 +321,69 @@ class _SignupScreenState extends State<SignupScreen> {
               }
               return null;
             },
-            name: 'confirm_password',
-            hintText: "Re-Enter Password",
+            textAlign: TextAlign.center,
+            style: GoogleFonts.montserrat(
+              fontSize: 15.sp,
+              color: AppColors.black,
+              fontWeight: FontWeight.w400,
+            ),
+            cursorColor: AppColors.black,
+            obscureText: controller.iscpasswordvisible,
+            decoration: InputDecoration(
+              counterText: "",
+              contentPadding: EdgeInsets.symmetric(vertical: 10.h),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.r),
+                borderSide: BorderSide(
+                  color: AppColors.greyColor.withOpacity(0.12),
+                  width: 1.r,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.r),
+                borderSide: BorderSide(
+                  color: AppColors.greyColor.withOpacity(0.12),
+                  width: 1.r,
+                ),
+              ),
+              suffixIcon: InkWell(
+                onTap: () {
+                  controller.changecpasswordvisiblity();
+                },
+                child: Icon(
+                  controller.iscpasswordvisible
+                      ? Icons.remove_red_eye
+                      : Icons.visibility_off_rounded,
+                  color: AppColors.greyColor,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.r),
+                borderSide: BorderSide(
+                  color: AppColors.greyColor.withOpacity(0.12),
+                  width: 1.r,
+                ),
+              ),
+              disabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.r),
+                borderSide: BorderSide(
+                  color: AppColors.greyColor.withOpacity(0.12),
+                  width: 1.r,
+                ),
+              ),
+              hintText: "Re-Enter Password",
+              hintStyle: AppText.text15w400.copyWith(
+                color: AppColors.black,
+              ),
+            ),
           ),
+
+          // AppTextFormField(
+          //   suffixIcon: Icon(Icons.remove_red_eye),
+
+          //   name: 'confirm_password',
+          //   hintText: "Re-Enter Password",
+          // ),
           sizedBoxWithHeight(40),
           // Divider(
           //   color: AppColors.greyColor.withOpacity(0.12),

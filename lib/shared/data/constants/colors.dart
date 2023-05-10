@@ -35,6 +35,7 @@ class AppColors {
   static Color get unselectedtext => const Color(0xff789ea8);
   static Color get dropshadow => const Color(0xff1A141419);
   static Color get yellowcolor => const Color(0xffFFFF70);
+  static Color get bluecolor => const Color(0xff26A2C6);
   static LinearGradient get postDetailGradient1 => LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,

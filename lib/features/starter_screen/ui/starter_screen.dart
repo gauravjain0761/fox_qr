@@ -39,8 +39,12 @@ class _StarterScreenState extends State<StarterScreen> {
                 child: Column(
                   children: [
                     sizedBoxWithHeight(48),
-                    AppImage(Images.foxLogo, width: 50.r, height: 50.r),
-                    sizedBoxWithHeight(86),
+                    AppImage(
+                      Images.foxLogo,
+                      width: 70.r,
+                      height: 70.r,
+                    ),
+                    sizedBoxWithHeight(50),
                     AppImage(
                       Images.manScanThisImage,
                       height: 400.h,

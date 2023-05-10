@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PastQrScreen extends StatefulWidget {
   const PastQrScreen({super.key});
@@ -11,6 +13,28 @@ class PastQrScreen extends StatefulWidget {
 }
 
 class _PastQrScreenState extends State<PastQrScreen> {
+  @override
+  void initState() {
+    isLoggedIn();
+    super.initState();
+  }
+
+  bool shownodataText = false;
+  Future isLoggedIn() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String istokenavailable = prefs.getString(Strings.usertoken) ?? "";
+    final bool isskipped = prefs.getBool(Strings.isskipped) ?? false;
+    if (istokenavailable == "" && !isskipped) {
+      setState(() {
+        shownodataText = true;
+      });
+    } else {
+      setState(() {
+        shownodataText = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,12 +50,21 @@ class _PastQrScreenState extends State<PastQrScreen> {
           onTap: FocusScope.of(context).unfocus,
           child: Padding(
             padding: EdgeInsets.only(top: 32.h),
-            child: ListView.separated(
-              padding: EdgeInsets.symmetric(horizontal: 15.w),
-              itemCount: 3,
-              separatorBuilder: (_, __) => sizedBoxWithHeight(20),
-              itemBuilder: (_, index) => _renderListItem(),
-            ),
+            child: shownodataText == false
+                ? Center(
+                    child: Text(
+                    "No past QR codes available",
+                    style: GoogleFonts.montserrat(
+                        color: Colors.black,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold),
+                  ))
+                : ListView.separated(
+                    padding: EdgeInsets.symmetric(horizontal: 15.w),
+                    itemCount: 3,
+                    separatorBuilder: (_, __) => sizedBoxWithHeight(20),
+                    itemBuilder: (_, index) => _renderListItem(),
+                  ),
           ),
         ),
       ),

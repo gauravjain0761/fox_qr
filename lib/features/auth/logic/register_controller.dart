@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:fox/api/app_repository.dart';
 import 'package:fox/models/register.dart';
@@ -10,12 +9,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class RegisterController extends ChangeNotifier {
   late RegisterSuccess _registerSuccess;
   bool isloading = false;
+  bool ispasswordvisible = false;
+  bool iscpasswordvisible = false;
 
-  get registersuccess => _registerSuccess;
+  RegisterSuccess get registersuccess => _registerSuccess;
 
   bool tncchecked = false;
   bool ppchecked = false;
-  final formKey = GlobalKey<FormBuilderState>();
 
   TextEditingController password = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -25,14 +25,23 @@ class RegisterController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void changepasswordvisiblity() {
+    ispasswordvisible = !ispasswordvisible;
+    notifyListeners();
+  }
+
+  void changecpasswordvisiblity() {
+    iscpasswordvisible = !iscpasswordvisible;
+    notifyListeners();
+  }
+
   void changepp() {
     ppchecked = !ppchecked;
     notifyListeners();
   }
 
-  void douserRegistration({
-    required BuildContext context,
-  }) {
+  void douserRegistration(
+      {required BuildContext context, required GlobalKey<FormState> formkey}) {
     Loader.show(context,
         progressIndicator: CircularProgressIndicator(
           color: AppColors.appColor,
@@ -49,18 +58,18 @@ class RegisterController extends ChangeNotifier {
       if (value["status"] == false) {
         Loader.hide();
 
-        if (context.mounted) {
-          context.showSnackBar(value["errors"]["email"][0].toString());
-        }
+        showSnackBar(value["errors"]["email"][0].toString());
       } else {
         _registerSuccess = RegisterSuccess.fromJson(value);
-        if (context.mounted) {
-          context.showSnackBar(_registerSuccess.message);
+        showSnackBar(_registerSuccess.message);
 
-          Loader.hide();
-        }
+        Loader.hide();
 
         prefs.setString(Strings.usertoken, _registerSuccess.token);
+        formkey.currentState!.reset();
+        emailController.text = "";
+        password.text = '';
+
         AppEnvironment.navigator.pushNamed(AuthRoutes.loginScreen);
         notifyListeners();
       }

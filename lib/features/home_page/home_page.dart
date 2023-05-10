@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fox/features/home_page/logic/home_controller.dart';
@@ -9,7 +10,9 @@ import 'package:fox/themes/app_text.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({
+    super.key,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -27,15 +30,21 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      endDrawer: const AppDrawer(),
-      appBar: PreferredSize(
-          preferredSize: Size.fromHeight(70.h),
-          child: AppHeader(onDrawerTap: _handlerDrawer)),
-      backgroundColor: AppColors.appColor,
-      resizeToAvoidBottomInset: false,
-      body: _renderBody(),
+    return WillPopScope(
+      onWillPop: () async {
+        SystemNavigator.pop();
+        return true;
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        endDrawer: const AppDrawer(),
+        appBar: PreferredSize(
+            preferredSize: Size.fromHeight(70.h),
+            child: AppHeader(onDrawerTap: _handlerDrawer)),
+        backgroundColor: AppColors.appColor,
+        resizeToAvoidBottomInset: false,
+        body: _renderBody(),
+      ),
     );
   }
 

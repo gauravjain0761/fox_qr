@@ -221,3 +221,16 @@ extension HexColor on Color {
       '${green.toRadixString(16).padLeft(2, '0')}'
       '${blue.toRadixString(16).padLeft(2, '0')}';
 }
+
+void showSnackBar(
+  String msg, {
+  Toast toastLength = Toast.LENGTH_SHORT,
+}) {
+  Fluttertoast.cancel();
+
+  Fluttertoast.showToast(
+    msg: msg,
+    toastLength: toastLength,
+    backgroundColor: const Color(0xff898989),
+  );
+}

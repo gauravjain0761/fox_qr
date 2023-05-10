@@ -2,7 +2,6 @@ import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTextFormField extends StatefulWidget {
@@ -16,7 +15,10 @@ class AppTextFormField extends StatefulWidget {
   final TextInputType? textInputType;
   final bool? alignLabelWithHint;
   final int? minLines;
+  final bool? obscuretext;
+  final Widget? suffixIcon;
   final bool? readOnly;
+  final Color? fillColor;
   final int? maxLength;
   final int? maxLines;
   final FormFieldValidator<String>? validator;
@@ -29,8 +31,11 @@ class AppTextFormField extends StatefulWidget {
     Key? key,
     required this.name,
     this.style,
+    this.obscuretext,
+    this.suffixIcon,
     this.onTap,
     this.labelText,
+    this.fillColor,
     this.hintText,
     this.readOnly = false,
     this.textInputType,
@@ -68,8 +73,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    return FormBuilderTextField(
-      name: widget.name,
+    return TextFormField(
       maxLength: widget.maxLength,
       keyboardType: widget.textInputType,
       maxLengthEnforcement: MaxLengthEnforcement.enforced,
@@ -77,6 +81,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       enabled: widget.enabled,
       controller: widget.controller,
       readOnly: widget.readOnly!,
+      obscureText: widget.obscuretext ?? false,
       textAlign: TextAlign.center,
       onTap: widget.onTap,
       style: widget.enabled
@@ -89,6 +94,8 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
           : AppText.text16w600OffWhite,
       cursorColor: AppColors.black,
       decoration: InputDecoration(
+        fillColor: widget.fillColor ?? Colors.transparent,
+        filled: true,
         counterText: "",
         contentPadding: EdgeInsets.symmetric(vertical: 10.h),
         border: OutlineInputBorder(
@@ -105,6 +112,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
             width: 1.r,
           ),
         ),
+        suffixIcon: widget.suffixIcon,
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(25.r),
           borderSide: BorderSide(

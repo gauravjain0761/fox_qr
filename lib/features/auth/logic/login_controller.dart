@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:fox/api/app_repository.dart';
 import 'package:fox/models/login.dart';
@@ -14,7 +13,12 @@ class LoginController extends ChangeNotifier {
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  final formKey = GlobalKey<FormBuilderState>();
+
+  void reset() {
+    emailController.clear();
+    passwordController.clear();
+    notifyListeners();
+  }
 
   void douserlogin({
     required BuildContext context,
@@ -31,17 +35,21 @@ class LoginController extends ChangeNotifier {
         .then((value) async {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       if (value.status == false) {
-        if (context.mounted) {
-          context.showSnackBar(value.message);
-          Loader.hide();
-        }
+        //if (context.mounted) {
+        context.showSnackBar(value.message);
+        Loader.hide();
+        //    }
       } else {
         _login = value;
 
         Loader.hide();
         prefs.setString(Strings.usertoken, _login.token!);
         prefs.setBool(Strings.isskipped, false);
-        AppEnvironment.navigator.pushNamed(
+        //  formKey.currentState!.reset();
+
+        emailController.text = "";
+        passwordController.text = "";
+        AppEnvironment.navigator.pushReplacementNamed(
           GeneralRoutes.homePageScreen,
         );
         notifyListeners();
@@ -56,18 +64,20 @@ class LoginController extends ChangeNotifier {
   Future<void> douserlogout({required BuildContext context}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String usertoken = prefs.getString(Strings.usertoken)!;
-    if (context.mounted) {
-      Loader.show(context,
-          progressIndicator: CircularProgressIndicator(
-            color: AppColors.appColor,
-          ));
-    }
+    //   if (context.mounted) {
+    Loader.show(context,
+        progressIndicator: CircularProgressIndicator(
+          color: AppColors.appColor,
+        ));
+    //   }
     AppRepository().userlogout(usertoken: usertoken).then((value) async {
       await prefs.remove(Strings.usertoken);
+      // formKey.currentState!.reset();
+
       AppEnvironment.navigator.pushReplacementNamed(AuthRoutes.loginScreen);
-      if (context.mounted) {
-        Loader.hide();
-      }
+      //    if (context.mounted) {
+      Loader.hide();
+      //  }
       notifyListeners();
     }).onError((error, stackTrace) {
       context.showSnackBar(error.toString());

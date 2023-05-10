@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter/services.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:fox/features/auth/logic/login_controller.dart';
 import 'package:fox/routes/routes.dart';
@@ -23,43 +23,70 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
   }
 
+  final GlobalKey<FormState> formKey =
+      GlobalKey<FormState>(debugLabel: '_login');
+
+  // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     final logincontroller = Provider.of<LoginController>(context);
 
-    return Scaffold(
-      appBar: const AppHeader(),
-      backgroundColor: AppColors.white,
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: FocusScope.of(context).unfocus,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 32.w),
-            child: Column(
-              children: [
-                const Spacer(),
-                _renderForm(controller: logincontroller),
-                const Spacer(),
-                AppButton(
-                  onClick: () {
-                    _handleOnTap(controller: logincontroller);
-                  },
-                  label: 'Log In',
-                  iconAlign: Alignment.centerRight,
-                  icon: Padding(
-                    padding: EdgeInsets.only(
-                      right: 15.w,
-                    ),
-                    child: AppImage(
-                      Images.arrowBackWhite,
-                      height: 16.h,
-                      width: 32.w,
+    return WillPopScope(
+      onWillPop: () async {
+        SystemNavigator.pop();
+        return true;
+      },
+      child: Scaffold(
+        //   key: _scaffoldKey,
+        endDrawer: const AppDrawer(),
+        appBar: AppHeader(
+          height: 70.h,
+          onDrawerTap: () async {
+            final SharedPreferences prefs =
+                await SharedPreferences.getInstance();
+            prefs.setBool(Strings.isskipped, true).then((value) {
+              formKey.currentState!.reset();
+              logincontroller.emailController.text = "";
+              logincontroller.passwordController.text = '';
+
+              AppEnvironment.navigator.pushNamed(GeneralRoutes.homePageScreen);
+            });
+            // AppEnvironment.navigator.pushNamed(G)
+          },
+        ),
+        backgroundColor: AppColors.white,
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(
+          child: GestureDetector(
+            onTap: FocusScope.of(context).unfocus,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 32.w),
+              child: Column(
+                children: [
+                  const Spacer(),
+                  _renderForm(controller: logincontroller),
+                  const Spacer(),
+                  AppButton(
+                    onClick: () {
+                      _handleOnTap(controller: logincontroller);
+                    },
+                    label: 'Log In',
+                    iconAlign: Alignment.centerRight,
+                    icon: Padding(
+                      padding: EdgeInsets.only(
+                        right: 15.w,
+                      ),
+                      child: AppImage(
+                        Images.arrowBackWhite,
+                        height: 16.h,
+                        width: 32.w,
+                      ),
                     ),
                   ),
-                ),
-                sizedBoxWithHeight(24),
-              ],
+                  sizedBoxWithHeight(24),
+                ],
+              ),
             ),
           ),
         ),
@@ -68,8 +95,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _renderForm({required LoginController controller}) {
-    return FormBuilder(
-      key: controller.formKey,
+    return Form(
+      key: formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(
         children: [
@@ -108,6 +135,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 TextSpan(
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
+                      formKey.currentState!.reset();
+                      controller.emailController.text = "";
+                      controller.passwordController.text = '';
                       AppEnvironment.navigator
                           .pushNamed(AuthRoutes.signupScreen);
                     },
@@ -134,6 +164,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 TextSpan(
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
+                      formKey.currentState!.reset();
+
+                      controller.emailController.text = "";
+                      controller.passwordController.text = '';
                       AppEnvironment.navigator
                           .pushNamed(AuthRoutes.forgotPasswordScreen);
                     },
@@ -158,6 +192,9 @@ class _LoginScreenState extends State<LoginScreen> {
               final SharedPreferences prefs =
                   await SharedPreferences.getInstance();
               prefs.setBool(Strings.isskipped, true).then((value) {
+                formKey.currentState!.reset();
+                controller.emailController.text = "";
+                controller.passwordController.text = '';
                 AppEnvironment.navigator
                     .pushReplacementNamed(GeneralRoutes.homePageScreen);
               });
@@ -184,7 +221,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _handleOnTap({required LoginController controller}) {
-    if (controller.formKey.currentState!.validate()) {
+    if (formKey.currentState!.validate()) {
       controller.douserlogin(
         context: context,
       );

@@ -8,6 +8,7 @@ import 'package:fox/api/app_repository.dart';
 import 'package:fox/features/home_page/widgets/downloadqrsheet.dart';
 import 'package:fox/models/create_qr.dart';
 import 'package:fox/models/qr_types.dart';
+import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:geolocator/geolocator.dart';
@@ -24,6 +25,7 @@ class HomeController extends ChangeNotifier {
   double? longitude;
   Uint8List? byteimage;
 
+  bool iscreatingqr = false;
   String qrtext = "";
   // late CreateQrAuth _createQrAuth;
   // CreateQrAuth get createqrauth => _createQrAuth;
@@ -62,8 +64,24 @@ class HomeController extends ChangeNotifier {
       TextEditingController(text: "FFFFFFFF");
   bool hidenetwork = true;
 
+  void saveimage(
+      {required BuildContext context,
+      required String image,
+      required GlobalKey<FormState> formkey}) {
+    GallerySaver.saveImage(image).then((success) {
+      context.showSnackBar(
+        "Your image has been saved to your photos",
+      );
+    }).whenComplete(() {
+      reset(formkey: formkey);
+      AppEnvironment.navigator.pushNamed(GeneralRoutes.homePageScreen);
+
+      notifyListeners();
+    });
+  }
+
   String? securitytype;
-  String qrStyle = "halftone";
+  String qrStyle = "fullcolor";
   int selectedbutton = 0;
   bool iscolorpickervisible = false;
   File? imageFile;
@@ -113,9 +131,11 @@ class HomeController extends ChangeNotifier {
   // Change Color Tone on click of tab
   void changecolortone({required int index}) {
     if (index == 0) {
+      qrStyle = "fullcolor";
+    } else if (index == 1) {
       qrStyle = "halftone";
     } else {
-      qrStyle = "fullcolor";
+      qrStyle = "oldschool";
     }
     notifyListeners();
   }
@@ -128,7 +148,6 @@ class HomeController extends ChangeNotifier {
       _qrTypes = value;
 
       notifyListeners();
-      //   context.removeLoadingIndicator;
     });
   }
 
@@ -136,11 +155,6 @@ class HomeController extends ChangeNotifier {
     iscolorpickervisible = !iscolorpickervisible;
     notifyListeners();
   }
-
-  // void oncolorChange({required Color color}) {
-  //   qrcolor = color.toHex();
-  //   notifyListeners();
-  // }
 
   void pickimagefromgallery({required BuildContext context}) {
     context
@@ -196,23 +210,6 @@ class HomeController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void saveimage({
-    required BuildContext context,
-    required String image,
-  }) {
-    GallerySaver.saveImage(image).then((success) {
-      context.showSnackBar(
-        "Your image has been saved to your photos",
-      );
-    }).whenComplete(() {
-      AppEnvironment.navigator.pop();
-      emailController.clear();
-      qrSizeController.clear();
-      imageFile!.path == "";
-      notifyListeners();
-    });
-  }
-
   String getSize() {
     if (selectedbutton == 0) {
       return qrsize = "600";
@@ -223,19 +220,15 @@ class HomeController extends ChangeNotifier {
     }
   }
 
-  Future<void> createqr({
-    required int qrtype,
-    required String qrname,
-    required BuildContext context,
-  }) async {
-    if (context.mounted) {
-      Loader.show(
-        context,
-        progressIndicator: CircularProgressIndicator(
-          color: AppColors.appColor,
-        ),
-      );
-    }
+  Future<void> createqr(
+      {required int qrtype,
+      required String qrname,
+      required BuildContext context,
+      required GlobalKey<FormState> formkey}) async {
+    // if (context.mounted) {
+
+    iscreatingqr = true;
+    //  }
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     if (qrname == "Website") {
@@ -276,15 +269,18 @@ class HomeController extends ChangeNotifier {
               qrimage: "data:image/jpeg;base64,$qrImage")
           .then((value) async {
         if (value["status"] == false) {
+          iscreatingqr = false;
           Loader.hide();
 
-          if (context.mounted) {
-            context.showSnackBar(value["message"].toString());
-          }
+          //     if (context.mounted) {
+          context.showSnackBar(value["message"].toString());
+          //    }
         } else {
           _createQr = CreateQr.fromJson(value);
+          iscreatingqr = false;
+
           Loader.hide();
-          downloadqr(context: context, createQr: createQr);
+          downloadqr(context: context, createQr: createQr, formkey: formkey);
           Uint8List bytes = base64.decode(createQr.image.split(',').last);
           byteimage = bytes;
           final tempDir = await getTemporaryDirectory();
@@ -307,15 +303,19 @@ class HomeController extends ChangeNotifier {
               qrimage: "data:image/jpeg;base64,$qrImage")
           .then((value) async {
         if (value["status"] == false) {
+          iscreatingqr = false;
+
           Loader.hide();
 
-          if (context.mounted) {
-            context.showSnackBar(value["message"].toString());
-          }
-        } else {
+          //   if (context.mounted) {
+          context.showSnackBar(value["message"].toString());
+          //   }
+          //  } else {
           _createQr = CreateQr.fromJson(value);
+          iscreatingqr = false;
+
           Loader.hide();
-          downloadqr(context: context, createQr: createQr);
+          downloadqr(context: context, createQr: createQr, formkey: formkey);
           Uint8List bytes0 = base64.decode(createQr.image.split(',').last);
           byteimage = bytes0;
           final tempDir = await getTemporaryDirectory();
@@ -326,5 +326,39 @@ class HomeController extends ChangeNotifier {
         }
       });
     }
+  }
+
+  void reset({required GlobalKey<FormState> formkey}) {
+    formkey.currentState!.reset();
+    wifipassword.text = "";
+    networkname.text = "";
+    cardurl.text = "";
+    cardcountry.text = "";
+    cardstate.text = "";
+    cardcity.text = "";
+    cardzip.text = "";
+
+    cardstreet.text = "";
+    cardjob.text = "";
+    cardorg.text = "";
+    cardemail.text = "";
+    cardphone.text = "";
+    cardlastname.text = "";
+    cardfirstname.text = "";
+    eventendTime.text = "";
+    emailController.text = "";
+    webisteController.text = '';
+    imageFile = null;
+    qrSizeController.text = "";
+    emailSubjectController.text = "";
+    emailMessageController.text = "";
+    socialProfileController.text = "";
+    whatsAppController.text = "";
+    latitudeController.text = "";
+    longitudeController.text = "";
+    eventtitle.text = "";
+    eventlocation.text = "";
+    eventstarttime.text = "";
+    notifyListeners();
   }
 }

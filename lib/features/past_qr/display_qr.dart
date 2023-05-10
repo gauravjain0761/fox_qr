@@ -16,7 +16,10 @@ class _DisplayQRDetailsScreenState extends State<DisplayQRDetailsScreen> {
     return Scaffold(
       backgroundColor: AppColors.white,
       resizeToAvoidBottomInset: false,
-      appBar: const AppHeader(leftWidget: AppBackButton()),
+      appBar: const AppHeader(
+        leftWidget: AppBackButton(),
+        isDrawerNeeded: false,
+      ),
       body: SafeArea(
         child: GestureDetector(
           onTap: FocusScope.of(context).unfocus,

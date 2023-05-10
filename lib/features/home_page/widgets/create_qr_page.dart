@@ -1,12 +1,13 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:fox/features/home_page/logic/home_controller.dart';
 import 'package:fox/models/qr_types.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:fox/shared/utils/color_picker.dart' as cp;
 import 'package:fox/themes/app_text.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -34,7 +35,7 @@ class _CreateQRPageState extends State<CreateQRPage>
 
   @override
   void initState() {
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     homecontroller = Provider.of<HomeController>(context, listen: false);
     homecontroller.fetchuserlocation();
     super.initState();
@@ -51,8 +52,8 @@ class _CreateQRPageState extends State<CreateQRPage>
     super.dispose();
   }
 
-  final _formKey = GlobalKey<FormBuilderState>();
-
+  final GlobalKey<FormState> _formKey =
+      GlobalKey<FormState>(debugLabel: 'createqr');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,6 +70,7 @@ class _CreateQRPageState extends State<CreateQRPage>
                     ),
                     color: AppColors.yellowColor,
                     child: AppHeader(
+                      isDrawerNeeded: false,
                       color: AppColors.yellowColor,
                       leftWidget: InkWell(
                         onTap: () {
@@ -93,7 +95,7 @@ class _CreateQRPageState extends State<CreateQRPage>
                     physics: const ScrollPhysics(),
                     primary: false,
                     children: [
-                      FormBuilder(
+                      Form(
                         key: _formKey,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: _renderQrContainer(
@@ -104,32 +106,35 @@ class _CreateQRPageState extends State<CreateQRPage>
                         padding: EdgeInsets.symmetric(
                           horizontal: 33.w,
                         ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            sizedBoxWithHeight(20),
-                            Text(
-                              "QR Image Size",
-                              style: AppText.text15w500black,
-                            ),
-                            sizedBoxWithHeight(30),
-                            _qrTabButtons(controller: homecontroller),
-                            sizedBoxWithHeight(30),
-                            Text(
-                              "Custom",
-                              style: AppText.text15w400,
-                            ),
-                            sizedBoxWithHeight(20),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                right: 90.w,
+                        child: Consumer<HomeController>(
+                          builder: (context, value, child) => Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              sizedBoxWithHeight(20),
+                              Text(
+                                "QR Image Size",
+                                style: AppText.text15w500black,
                               ),
-                              child: Row(
-                                children: [
-                                  Consumer<HomeController>(
-                                    builder: (context, value, child) =>
-                                        Flexible(
+                              sizedBoxWithHeight(30),
+                              _qrTabButtons(controller: homecontroller),
+                              sizedBoxWithHeight(30),
+                              Text(
+                                "Custom",
+                                style: AppText.text15w400.copyWith(
+                                  color: value.selectedbutton != 2
+                                      ? AppColors.textcolor
+                                      : AppColors.black,
+                                ),
+                              ),
+                              sizedBoxWithHeight(20),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  right: 90.w,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Flexible(
                                       child: AppTextFormField(
                                         maxLength: 4,
                                         readOnly: homecontroller
@@ -141,43 +146,58 @@ class _CreateQRPageState extends State<CreateQRPage>
                                             : false,
                                         name: "custom size",
                                         hintText: "0000",
+
                                         controller:
                                             homecontroller.qrSizeController,
                                         textInputType: TextInputType.number,
                                         // inputFormatters: [
                                         //   LengthLimitingTextInputFormatter(4),
                                         // ],
-                                        hintStyle: AppText.text15w400,
+
+                                        hintStyle: AppText.text15w400.copyWith(
+                                          color: value.selectedbutton != 2
+                                              ? AppColors.textcolor
+                                              : AppColors.black,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  sizedBoxWithWidth(11),
-                                  Text(
-                                    "px",
-                                    style: AppText.text15w400.copyWith(
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 12.sp,
+                                    sizedBoxWithWidth(11),
+                                    Text(
+                                      "px",
+                                      style: AppText.text15w400.copyWith(
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 12.sp,
+                                        color: value.selectedbutton != 2
+                                            ? AppColors.textcolor
+                                            : AppColors.black,
+                                      ),
                                     ),
-                                  ),
-                                  sizedBoxWithWidth(21),
-                                  Text(
-                                    "By",
-                                    style: AppText.text15w400.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12.sp,
+                                    sizedBoxWithWidth(21),
+                                    Text(
+                                      "By",
+                                      style: AppText.text15w400.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 12.sp,
+                                        color: value.selectedbutton != 2
+                                            ? AppColors.textcolor
+                                            : AppColors.black,
+                                      ),
                                     ),
-                                  ),
-                                  sizedBoxWithWidth(20),
-                                  Text(
-                                    "0000 px",
-                                    style: AppText.text15w400.copyWith(
-                                      fontWeight: FontWeight.w600,
+                                    sizedBoxWithWidth(20),
+                                    Text(
+                                      "0000 px",
+                                      style: AppText.text15w400.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: value.selectedbutton != 2
+                                            ? AppColors.textcolor
+                                            : AppColors.black,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       sizedBoxWithHeight(30),
@@ -284,15 +304,6 @@ class _CreateQRPageState extends State<CreateQRPage>
                               ),
                             ),
                             sizedBoxWithHeight(30),
-                            _qrDisplayImage(controller: homecontroller),
-                            sizedBoxWithHeight(33),
-                            _qrChooseImage(controller: homecontroller),
-                            sizedBoxWithHeight(14),
-                            Text(
-                              "Maximum size 5 MB",
-                              style: AppText.text10w400,
-                            ),
-                            sizedBoxWithHeight(39),
                             _qrTabBar(
                               controller: homecontroller,
                             ),
@@ -304,6 +315,116 @@ class _CreateQRPageState extends State<CreateQRPage>
                           return ShrinkWrappingTabBarView(
                             tabController: _tabController,
                             children: [
+                              Column(
+                                children: [
+                                  sizedBoxWithHeight(39),
+                                  _qrDisplayImage(controller: homecontroller),
+                                  sizedBoxWithHeight(33),
+                                  Visibility(
+                                    // visible:homecontroller.tab,
+                                    child: _qrChooseImage(
+                                        controller: homecontroller),
+                                  ),
+                                  sizedBoxWithHeight(14),
+                                  Text(
+                                    "Maximum size 5 MB",
+                                    style: AppText.text10w400,
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  sizedBoxWithHeight(39),
+                                  _qrDisplayImage(controller: homecontroller),
+                                  sizedBoxWithHeight(33),
+                                  Visibility(
+                                    // visible:homecontroller.tab,
+                                    child: _qrChooseImage(
+                                        controller: homecontroller),
+                                  ),
+                                  sizedBoxWithHeight(14),
+                                  Text(
+                                    "Maximum size 5 MB",
+                                    style: AppText.text10w400,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                      color: AppColors.yellowColor,
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 24.w,
+                                      vertical: 15.h,
+                                      // vertical: 20.h,
+                                    ),
+                                    margin: EdgeInsets.symmetric(
+                                          horizontal: 36.w,
+                                        ) +
+                                        EdgeInsets.only(
+                                          top: 40.h,
+                                        ),
+                                    child: Column(
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            homecontroller
+                                                .chagecolorpickervisiblity();
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "Colour",
+                                                style:
+                                                    AppText.text17w600.copyWith(
+                                                  color: AppColors.black,
+                                                ),
+                                              ),
+                                              Icon(
+                                                Icons.add,
+                                                color: AppColors.black,
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: homecontroller
+                                              .iscolorpickervisible,
+                                          child: sizedBoxWithHeight(35),
+                                        ),
+                                        Visibility(
+                                          visible: homecontroller
+                                              .iscolorpickervisible,
+                                          child: cp.ColorPicker(
+                                            enableAlpha: true,
+                                            pickerHsvColor: HSVColor.fromColor(
+                                                Colors.white),
+                                            hexInputController: homecontroller
+                                                .colorcodecontroller,
+
+                                            portraitOnly: false,
+                                            displayThumbColor: false,
+
+                                            labelTypes: const [],
+                                            //  paletteType: PaletteType.hueWheel,
+
+                                            pickerColor:
+                                                Colors.red, //default color
+                                            onColorChanged: (Color color) {
+                                              // homecontroller.oncolorChange(
+                                              //   color: color,
+                                              // );
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              // second tab bar view widget
+
                               Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10.r),
@@ -376,8 +497,6 @@ class _CreateQRPageState extends State<CreateQRPage>
                                   ],
                                 ),
                               ),
-                              // second tab bar view widget
-                              sizedBoxWithHeight(0),
                             ],
                           );
                         },
@@ -426,6 +545,14 @@ class _CreateQRPageState extends State<CreateQRPage>
   Widget _qrSubmit({required HomeController controller}) {
     return Consumer<HomeController>(
       builder: (context, value, child) {
+        if (value.iscreatingqr) {
+          Loader.show(
+            context,
+            progressIndicator: CircularProgressIndicator(
+              color: AppColors.appColor,
+            ),
+          );
+        }
         return InkWell(
           onTap: () {
             if (_formKey.currentState!.validate()) {
@@ -433,12 +560,106 @@ class _CreateQRPageState extends State<CreateQRPage>
                 if (homecontroller.selectedbutton == 2) {
                   if (homecontroller.qrSizeController.text.isEmpty) {
                     context.showSnackBar("Please Enter Qr Size");
-                  } else {
-                    controller.createqr(
-                        qrtype: widget.qrtype.id,
-                        context: context,
-                        qrname: widget.qrtype.name);
                   }
+                } else if (controller.qrStyle == "halftone") {
+                  showModalBottomSheet(
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20))),
+                    context: context,
+                    builder: (context) {
+                      return Container(
+                        decoration: const BoxDecoration(
+                            color: Color(0xffDBF5FC),
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20))),
+                        padding: EdgeInsets.only(
+                          top: 20.h,
+                          bottom: 20.h,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "Please Note",
+                              style: GoogleFonts.montserrat(
+                                color: Colors.black,
+                                fontSize: 25.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            sizedBoxWithHeight(27),
+                            Text(
+                              "Half-tone QR codes are best for\nsmaller sized codes.",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.montserrat(
+                                  color: Colors.black,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            sizedBoxWithHeight(19),
+                            Text(
+                              "To achieve a better result on your Half-tone\nQR code, upload an image that has a\ntransparent or white background.",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.montserrat(
+                                  color: Colors.black,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            sizedBoxWithHeight(35),
+                            InkWell(
+                              onTap: () {
+                                controller.createqr(
+                                    formkey: _formKey,
+                                    qrtype: widget.qrtype.id,
+                                    context: context,
+                                    qrname: widget.qrtype.name);
+                              },
+                              child: Container(
+                                margin: EdgeInsets.symmetric(
+                                  horizontal: 36.w,
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                      vertical: 18.h,
+                                    ) +
+                                    EdgeInsets.only(
+                                      left: 80.w,
+                                      right: 20.w,
+                                    ),
+                                decoration: BoxDecoration(
+                                    color: AppColors.black,
+                                    borderRadius: BorderRadius.circular(
+                                      30.r,
+                                    )),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "     Continue ",
+                                      style: AppText.text20w600White,
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward,
+                                      color: AppColors.white,
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                } else {
+                  controller.createqr(
+                      formkey: _formKey,
+                      qrtype: widget.qrtype.id,
+                      context: context,
+                      qrname: widget.qrtype.name);
                 }
               } else {
                 context.showErrorSnackBar("Please Select Image");
@@ -497,29 +718,29 @@ class _CreateQRPageState extends State<CreateQRPage>
         controller: _tabController,
         // give the indicator a decoration (color and border radius)
         indicator: BoxDecoration(
-          border: Border.all(
-            color: AppColors.black,
-            width: 2.w,
-          ),
           borderRadius: BorderRadius.circular(
             25.0,
           ),
           color: Colors.white,
         ),
 
-        labelStyle: AppText.text17w600,
-        labelColor: AppColors.black,
-        unselectedLabelColor: AppColors.black.withOpacity(0.5),
+        labelStyle: AppText.text13w600,
+        labelColor: AppColors.bluecolor,
+
+        unselectedLabelColor: AppColors.bluecolor,
         onTap: (value) {
           controller.changecolortone(index: value);
         },
         tabs: const [
           Tab(
+            text: 'Full Colour',
+          ),
+          Tab(
             text: 'Half-Tone',
           ),
           Tab(
-            text: 'Full Colour',
-          ),
+            text: "Old School",
+          )
         ],
       ),
     );
@@ -718,6 +939,8 @@ class _CreateQRPageState extends State<CreateQRPage>
           ),
           sizedBoxWithHeight(36),
           AppTextFormField(
+            fillColor: AppColors.white,
+            textInputType: TextInputType.url,
             validator: FormBuilderValidators.compose(
               [
                 FormBuilderValidators.required(),
@@ -726,6 +949,9 @@ class _CreateQRPageState extends State<CreateQRPage>
             ),
             name: "website",
             hintText: "Enter url here",
+            hintStyle: AppText.text15w400.copyWith(
+              color: AppColors.black.withOpacity(0.3),
+            ),
             controller: controller.webisteController,
           ),
           sizedBoxWithHeight(36),
@@ -743,6 +969,8 @@ class _CreateQRPageState extends State<CreateQRPage>
               top: 36.h,
             ),
             child: AppTextFormField(
+              fillColor: AppColors.white,
+              textInputType: TextInputType.emailAddress,
               controller: controller.emailController,
               validator: FormBuilderValidators.compose(
                 [
@@ -752,29 +980,42 @@ class _CreateQRPageState extends State<CreateQRPage>
               ),
               name: "email",
               hintText: "email@address.foxtrot",
+              hintStyle: AppText.text15w400.copyWith(
+                color: AppColors.black.withOpacity(0.3),
+              ),
             ),
           ),
           sizedBoxWithHeight(20),
           AppTextFormField(
+            fillColor: AppColors.white,
             controller: controller.emailSubjectController,
             validator: FormBuilderValidators.compose(
               [
                 FormBuilderValidators.required(),
               ],
             ),
+            textInputType: TextInputType.text,
+            hintStyle: AppText.text15w400.copyWith(
+              color: AppColors.black.withOpacity(0.3),
+            ),
             name: "subject",
             hintText: "Subject",
           ),
           sizedBoxWithHeight(20),
           AppTextFormField(
+            textInputType: TextInputType.multiline,
             validator: FormBuilderValidators.compose(
               [
                 FormBuilderValidators.required(),
               ],
             ),
+            fillColor: AppColors.white,
             name: "message",
             controller: controller.emailMessageController,
             maxLines: 6,
+            hintStyle: AppText.text15w400.copyWith(
+              color: AppColors.black.withOpacity(0.3),
+            ),
             hintText: "Message",
           ),
           sizedBoxWithHeight(41),
@@ -792,8 +1033,12 @@ class _CreateQRPageState extends State<CreateQRPage>
               top: 36.h,
             ),
             child: AppTextFormField(
+              fillColor: AppColors.white,
               name: "whatsapp",
               controller: controller.whatsAppController,
+              hintStyle: AppText.text15w400.copyWith(
+                color: AppColors.black.withOpacity(0.3),
+              ),
               textInputType: TextInputType.phone,
               hintText: "+27 082 345 6789",
               validator: FormBuilderValidators.compose(
@@ -820,6 +1065,10 @@ class _CreateQRPageState extends State<CreateQRPage>
             child: Consumer<HomeController>(
               builder: (context, value, child) {
                 return AppTextFormField(
+                  hintStyle: AppText.text15w400.copyWith(
+                    color: AppColors.black.withOpacity(0.3),
+                  ),
+                  fillColor: AppColors.white,
                   textInputType: TextInputType.number,
                   name: "Longitude",
                   controller: controller.longitudeController,
@@ -835,6 +1084,10 @@ class _CreateQRPageState extends State<CreateQRPage>
           ),
           sizedBoxWithHeight(20),
           AppTextFormField(
+            fillColor: AppColors.white,
+            hintStyle: AppText.text15w400.copyWith(
+              color: AppColors.black.withOpacity(0.3),
+            ),
             textInputType: TextInputType.number,
             name: "Latitude",
             controller: controller.latitudeController,
@@ -860,6 +1113,10 @@ class _CreateQRPageState extends State<CreateQRPage>
               top: 36.h,
             ),
             child: AppTextFormField(
+              fillColor: AppColors.white,
+              hintStyle: AppText.text15w400.copyWith(
+                color: AppColors.black.withOpacity(0.3),
+              ),
               controller: controller.socialProfileController,
               validator: FormBuilderValidators.compose(
                 [
@@ -870,7 +1127,7 @@ class _CreateQRPageState extends State<CreateQRPage>
               hintText: "IG Profile Link",
             ),
           ),
-          sizedBoxWithHeight(20),
+          sizedBoxWithHeight(40),
           GridView.builder(
               shrinkWrap: true,
               itemCount: controller.icons.length,
@@ -882,31 +1139,18 @@ class _CreateQRPageState extends State<CreateQRPage>
               ),
               itemBuilder: (context, index) {
                 return InkWell(
-                  onTap: () {
-                    controller.changeIconindex(index: index);
-                  },
+                  // onTap: () {
+                  //   controller.changeIconindex(index: index);
+                  // },
                   child: Container(
                     height: 69.h,
                     width: 69.w,
                     decoration: BoxDecoration(
-                      color: index == controller.selectedicon
-                          ? AppColors.black
-                          : AppColors.yellowColor,
-                      borderRadius: BorderRadius.circular(10.r),
-                      boxShadow: [
-                        index == controller.selectedicon
-                            ? const BoxShadow()
-                            : BoxShadow(
-                                color: AppColors.dropshadow,
-                                spreadRadius: 0,
-                                blurRadius: 10,
-                                offset: const Offset(
-                                  0,
-                                  3,
-                                ),
-                              )
-                      ],
-                    ),
+                        color: AppColors.yellowColor,
+                        borderRadius: BorderRadius.circular(10.r),
+                        border: Border.all(
+                          color: AppColors.black,
+                        )),
                     child: Center(
                       child: AppImage(
                         controller.icons.elementAt(
@@ -914,9 +1158,7 @@ class _CreateQRPageState extends State<CreateQRPage>
                         ),
                         height: 38.h,
                         width: 38.w,
-                        color: index == controller.selectedicon
-                            ? AppColors.white
-                            : AppColors.black,
+                        color: AppColors.black,
                       ),
                     ),
                   ),
@@ -937,6 +1179,10 @@ class _CreateQRPageState extends State<CreateQRPage>
               top: 36.h,
             ),
             child: AppTextFormField(
+              fillColor: AppColors.white,
+              hintStyle: AppText.text15w400.copyWith(
+                color: AppColors.black.withOpacity(0.3),
+              ),
               validator: FormBuilderValidators.compose(
                 [
                   FormBuilderValidators.required(),
@@ -989,7 +1235,11 @@ class _CreateQRPageState extends State<CreateQRPage>
           ),
           sizedBoxWithHeight(30),
           AppTextFormField(
+            fillColor: AppColors.white,
             name: "password",
+            hintStyle: AppText.text15w400.copyWith(
+              color: AppColors.black.withOpacity(0.3),
+            ),
             validator: FormBuilderValidators.compose(
               [
                 FormBuilderValidators.required(),
@@ -1001,6 +1251,7 @@ class _CreateQRPageState extends State<CreateQRPage>
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
+              color: AppColors.white,
               borderRadius: BorderRadius.circular(25.r),
               border: Border.all(
                 color: AppColors.greyColor.withOpacity(0.12),
@@ -1016,7 +1267,9 @@ class _CreateQRPageState extends State<CreateQRPage>
                       child: Text(
                         controller.securitytype ?? "Security Type",
                         style: AppText.text15w400.copyWith(
-                          color: AppColors.black,
+                          color: controller.securitytype != null
+                              ? AppColors.black
+                              : AppColors.black.withOpacity(0.3),
                         ),
                       ),
                     ),
@@ -1031,6 +1284,7 @@ class _CreateQRPageState extends State<CreateQRPage>
                       ),
                     ),
                     isExpanded: true,
+
                     dropdownColor: AppColors.white,
                     underline: const SizedBox(),
                     items: ['WPA2', 'WPA3'].map((String items) {
@@ -1070,6 +1324,10 @@ class _CreateQRPageState extends State<CreateQRPage>
               top: 36.h,
             ),
             child: AppTextFormField(
+              fillColor: AppColors.white,
+              hintStyle: AppText.text15w400.copyWith(
+                color: AppColors.black.withOpacity(0.3),
+              ),
               controller: controller.eventtitle,
               validator: FormBuilderValidators.compose(
                 [
@@ -1082,6 +1340,10 @@ class _CreateQRPageState extends State<CreateQRPage>
           ),
           sizedBoxWithHeight(20),
           AppTextFormField(
+            fillColor: AppColors.white,
+            hintStyle: AppText.text15w400.copyWith(
+              color: AppColors.black.withOpacity(0.3),
+            ),
             controller: controller.eventlocation,
             name: "eventLocation",
             validator: FormBuilderValidators.compose(
@@ -1096,6 +1358,11 @@ class _CreateQRPageState extends State<CreateQRPage>
             children: [
               Expanded(
                 child: AppTextFormField(
+                  fillColor: AppColors.white,
+
+                  hintStyle: AppText.text15w400.copyWith(
+                    color: AppColors.black.withOpacity(0.3),
+                  ),
                   onTap: () {
                     showTimePicker(
                       context: context,
@@ -1117,6 +1384,10 @@ class _CreateQRPageState extends State<CreateQRPage>
               sizedBoxWithWidth(10),
               Expanded(
                 child: AppTextFormField(
+                  fillColor: AppColors.white,
+                  hintStyle: AppText.text15w400.copyWith(
+                    color: AppColors.black.withOpacity(0.3),
+                  ),
                   controller: controller.eventendTime,
                   onTap: () {
                     showTimePicker(
@@ -1150,6 +1421,10 @@ class _CreateQRPageState extends State<CreateQRPage>
               top: 36.h,
             ),
             child: AppTextFormField(
+              fillColor: AppColors.white,
+              hintStyle: AppText.text15w400.copyWith(
+                color: AppColors.black.withOpacity(0.3),
+              ),
               controller: controller.cardfirstname,
               validator: FormBuilderValidators.compose(
                 [
@@ -1162,6 +1437,10 @@ class _CreateQRPageState extends State<CreateQRPage>
           ),
           sizedBoxWithHeight(20),
           AppTextFormField(
+            fillColor: AppColors.white,
+            hintStyle: AppText.text15w400.copyWith(
+              color: AppColors.black.withOpacity(0.3),
+            ),
             controller: controller.cardlastname,
             validator: FormBuilderValidators.compose(
               [
@@ -1173,6 +1452,10 @@ class _CreateQRPageState extends State<CreateQRPage>
           ),
           sizedBoxWithHeight(20),
           AppTextFormField(
+            fillColor: AppColors.white,
+            hintStyle: AppText.text15w400.copyWith(
+              color: AppColors.black.withOpacity(0.3),
+            ),
             controller: controller.cardphone,
             validator: FormBuilderValidators.compose(
               [
@@ -1185,6 +1468,10 @@ class _CreateQRPageState extends State<CreateQRPage>
           ),
           sizedBoxWithHeight(20),
           AppTextFormField(
+            fillColor: AppColors.white,
+            hintStyle: AppText.text15w400.copyWith(
+              color: AppColors.black.withOpacity(0.3),
+            ),
             controller: controller.cardemail,
             validator: FormBuilderValidators.compose(
               [FormBuilderValidators.required(), FormBuilderValidators.email()],
@@ -1195,6 +1482,10 @@ class _CreateQRPageState extends State<CreateQRPage>
           ),
           sizedBoxWithHeight(20),
           AppTextFormField(
+            fillColor: AppColors.white,
+            hintStyle: AppText.text15w400.copyWith(
+              color: AppColors.black.withOpacity(0.3),
+            ),
             controller: controller.cardorg,
             validator: FormBuilderValidators.compose(
               [
@@ -1206,6 +1497,10 @@ class _CreateQRPageState extends State<CreateQRPage>
           ),
           sizedBoxWithHeight(20),
           AppTextFormField(
+            fillColor: AppColors.white,
+            hintStyle: AppText.text15w400.copyWith(
+              color: AppColors.black.withOpacity(0.3),
+            ),
             controller: controller.cardjob,
             validator: FormBuilderValidators.compose(
               [
@@ -1217,6 +1512,10 @@ class _CreateQRPageState extends State<CreateQRPage>
           ),
           sizedBoxWithHeight(50),
           AppTextFormField(
+            fillColor: AppColors.white,
+            hintStyle: AppText.text15w400.copyWith(
+              color: AppColors.black.withOpacity(0.3),
+            ),
             controller: controller.cardstreet,
             validator: FormBuilderValidators.compose(
               [
@@ -1228,6 +1527,10 @@ class _CreateQRPageState extends State<CreateQRPage>
           ),
           sizedBoxWithHeight(20),
           AppTextFormField(
+            fillColor: AppColors.white,
+            hintStyle: AppText.text15w400.copyWith(
+              color: AppColors.black.withOpacity(0.3),
+            ),
             controller: controller.cardcity,
             validator: FormBuilderValidators.compose(
               [
@@ -1239,6 +1542,10 @@ class _CreateQRPageState extends State<CreateQRPage>
           ),
           sizedBoxWithHeight(20),
           AppTextFormField(
+            fillColor: AppColors.white,
+            hintStyle: AppText.text15w400.copyWith(
+              color: AppColors.black.withOpacity(0.3),
+            ),
             controller: controller.cardzip,
             validator: FormBuilderValidators.compose(
               [
@@ -1251,6 +1558,10 @@ class _CreateQRPageState extends State<CreateQRPage>
           ),
           sizedBoxWithHeight(20),
           AppTextFormField(
+            fillColor: AppColors.white,
+            hintStyle: AppText.text15w400.copyWith(
+              color: AppColors.black.withOpacity(0.3),
+            ),
             controller: controller.cardstate,
             validator: FormBuilderValidators.compose(
               [
@@ -1262,6 +1573,10 @@ class _CreateQRPageState extends State<CreateQRPage>
           ),
           sizedBoxWithHeight(20),
           AppTextFormField(
+            fillColor: AppColors.white,
+            hintStyle: AppText.text15w400.copyWith(
+              color: AppColors.black.withOpacity(0.3),
+            ),
             controller: controller.cardcountry,
             validator: FormBuilderValidators.compose(
               [
@@ -1273,6 +1588,10 @@ class _CreateQRPageState extends State<CreateQRPage>
           ),
           sizedBoxWithHeight(20),
           AppTextFormField(
+            fillColor: AppColors.white,
+            hintStyle: AppText.text15w400.copyWith(
+              color: AppColors.black.withOpacity(0.3),
+            ),
             controller: controller.cardurl,
             validator: FormBuilderValidators.compose(
               [
