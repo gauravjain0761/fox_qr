@@ -18,6 +18,7 @@ class RegisterController extends ChangeNotifier {
   bool ppchecked = false;
 
   TextEditingController password = TextEditingController();
+  TextEditingController username = TextEditingController();
   TextEditingController emailController = TextEditingController();
 
   void changetnc() {

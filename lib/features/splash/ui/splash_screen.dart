@@ -34,7 +34,7 @@ class SplashScreen extends StatelessWidget {
                 children: [
                   const Spacer(),
                   AppImage(
-                    Images.foxLogo,
+                    "assets/images/splashlogo.svg",
                     width: 150.r,
                     height: 150.r,
                   ),
@@ -44,29 +44,24 @@ class SplashScreen extends StatelessWidget {
                       text: 'QR',
                       style: GoogleFonts.montserrat(
                         color: AppColors.pinkColor,
-                        fontSize: 48.sp,
-                        fontWeight: FontWeight.w700,
+                        fontSize: 55.sp,
+                        fontWeight: FontWeight.bold,
                       ),
                       children: [
                         TextSpan(
                           text: ' FOX',
                           style: GoogleFonts.montserrat(
                             color: AppColors.black,
-                            fontSize: 48.sp,
-                            fontWeight: FontWeight.w700,
+                            fontSize: 53.sp,
+                            fontWeight: FontWeight.bold,
                           ),
                         )
                       ],
                     ),
                   ),
                   const Spacer(),
-                  Text(
-                    'WELCOME',
-                    style: GoogleFonts.montserrat(
-                      fontSize: 35.sp,
-                      color: AppColors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  AppImage(
+                    "assets/images/welcome.svg",
                   ),
                   sizedBoxWithHeight(26),
                   Text(

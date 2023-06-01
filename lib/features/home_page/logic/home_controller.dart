@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:fox/api/app_repository.dart';
 import 'package:fox/features/home_page/widgets/downloadqrsheet.dart';
@@ -24,11 +26,8 @@ class HomeController extends ChangeNotifier {
   double? latitude;
   double? longitude;
   Uint8List? byteimage;
-
   bool iscreatingqr = false;
   String qrtext = "";
-  // late CreateQrAuth _createQrAuth;
-  // CreateQrAuth get createqrauth => _createQrAuth;
   CreateQr get createQr => _createQr;
 
   TextEditingController qrSizeController = TextEditingController();
@@ -64,20 +63,60 @@ class HomeController extends ChangeNotifier {
       TextEditingController(text: "FFFFFFFF");
   bool hidenetwork = true;
 
+  Future<void> handleDownloadComplete(String imagePath) async {
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+    final String channelId = 'image_download_channel';
+    const String channelName = 'Image Download Channel';
+
+    final AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      channelId,
+      channelName,
+      importance: Importance.high,
+      priority: Priority.high,
+    );
+
+    const DarwinNotificationDetails iOSPlatformChannelSpecifics =
+        DarwinNotificationDetails();
+
+    final NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: iOSPlatformChannelSpecifics,
+    );
+
+    const int notificationId = 0;
+
+    await flutterLocalNotificationsPlugin.show(
+      notificationId,
+      'Image Downloaded',
+      'Tap to view the downloaded image',
+      platformChannelSpecifics,
+      payload: imagePath, // Pass the image path as payload to retrieve it later
+    );
+  }
+
   void saveimage(
       {required BuildContext context,
       required String image,
       required GlobalKey<FormState> formkey}) {
-    GallerySaver.saveImage(image).then((success) {
+    GallerySaver.saveImage(image).then((success) async {
       context.showSnackBar(
         "Your image has been saved to your photos",
       );
+      await handleDownloadComplete(image);
     }).whenComplete(() {
       reset(formkey: formkey);
       AppEnvironment.navigator.pushNamed(GeneralRoutes.homePageScreen);
 
       notifyListeners();
     });
+  }
+
+  String qrsizetext = "";
+  void getqrsize(value) {
+    qrsizetext = value;
+    notifyListeners();
   }
 
   String? securitytype;
@@ -289,6 +328,12 @@ class HomeController extends ChangeNotifier {
           fileimage = file;
           notifyListeners();
         }
+      }).onError((error, stackTrace) {
+        Loader.hide();
+        iscreatingqr = false;
+
+        context.showSnackBar(error.toString());
+        notifyListeners();
       });
     } else {
       AppRepository()
@@ -310,7 +355,7 @@ class HomeController extends ChangeNotifier {
           //   if (context.mounted) {
           context.showSnackBar(value["message"].toString());
           //   }
-          //  } else {
+        } else {
           _createQr = CreateQr.fromJson(value);
           iscreatingqr = false;
 
@@ -324,6 +369,13 @@ class HomeController extends ChangeNotifier {
           fileimage = file;
           notifyListeners();
         }
+      }).onError((error, stackTrace) {
+        log(error.toString());
+        Loader.hide();
+        iscreatingqr = false;
+
+        context.showSnackBar(error.toString());
+        notifyListeners();
       });
     }
   }

@@ -82,6 +82,7 @@ extension BuildContextExtension on BuildContext {
     ImageSource source = ImageSource.gallery,
   }) async {
     try {
+      // ignore: invalid_use_of_visible_for_testing_member
       final xPath = await ImagePicker.platform.getImage(
         source: source,
       );
@@ -109,7 +110,7 @@ extension BuildContextExtension on BuildContext {
           toolbarColor: AppColors.black,
           toolbarWidgetColor: AppColors.white,
           initAspectRatio: CropAspectRatioPreset.square,
-          lockAspectRatio: false,
+          lockAspectRatio: true,
         ),
         IOSUiSettings(
           title: 'Cropper',

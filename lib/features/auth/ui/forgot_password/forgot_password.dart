@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:fox/features/auth/logic/reset_password_controller.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -16,9 +17,14 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final GlobalKey<FormState> _formKey =
       GlobalKey<FormState>(debugLabel: 'forgot');
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final controller = Provider.of<ResetPasswordController>(context);
     return Scaffold(
       appBar: AppHeader(
         leftWidget: InkWell(
@@ -49,18 +55,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             child: Column(
               children: [
                 const Spacer(),
-                _renderForm(),
+                _renderForm(controller: controller),
                 const Spacer(),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  child: AppButton(
-                    border: Border.all(color: AppColors.black, width: 2.r),
-                    primaryColor: AppColors.white,
-                    highLightedTextColor: AppColors.black,
-                    textStyle: AppText.text20w600Black,
-                    onClick: _handleSend,
-                    label: 'Send',
-                  ),
+                AppButton(
+                  border: Border.all(color: AppColors.black, width: 2.r),
+                  primaryColor: AppColors.white,
+                  highLightedTextColor: AppColors.black,
+                  textStyle: AppText.text20w600Black,
+                  onClick: (() {
+                    _handleSend(controller: controller);
+                  }),
+                  label: 'Send',
                 ),
               ],
             ),
@@ -70,7 +75,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
-  Widget _renderForm() {
+  Widget _renderForm({required ResetPasswordController controller}) {
     return Form(
       key: _formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -97,6 +102,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           sizedBoxWithHeight(40),
           AppTextFormField(
             name: 'email',
+            controller: controller.emailController,
             hintText: "email@address.foxtrot",
             validator: (value) {
               if (isValidEmail(value!)) {
@@ -114,9 +120,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
-  void _handleSend() {
+  void _handleSend({required ResetPasswordController controller}) {
     if (_formKey.currentState!.validate()) {
-      AppEnvironment.navigator.pushNamed(AuthRoutes.createNewPasswordScreen);
+      controller.forgotpassword(context: context);
     }
   }
 }

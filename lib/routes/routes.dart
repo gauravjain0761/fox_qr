@@ -6,6 +6,7 @@ import 'package:fox/features/past_qr/past_qr.dart';
 import 'package:fox/features/splash/index.dart';
 import 'package:fox/features/starter_screen/ui/starter_screen.dart';
 import 'package:fox/models/qr_types.dart';
+import 'package:fox/features/price_plan_ui/home_view.dart';
 import 'package:fox/routes/arguments/index.dart';
 import 'package:fox/shared/shared.dart';
 

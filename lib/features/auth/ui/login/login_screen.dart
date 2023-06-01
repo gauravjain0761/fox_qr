@@ -121,13 +121,93 @@ class _LoginScreenState extends State<LoginScreen> {
             hintText: "email@address.foxtrot",
           ),
           sizedBoxWithHeight(20),
-          AppTextFormField(
+          TextFormField(
             controller: controller.passwordController,
-            name: 'password',
-            hintText: "Password",
-            validator: FormBuilderValidators.required(),
+            textAlign: TextAlign.center,
+            validator: (value) {
+              if (value!.length < 8) {
+                return "Password must be of 8 characters with at least one\ndigit and one special character";
+              } else if (!value.contains(
+                RegExp("(?=.*?[A-Za-z])"),
+              )) {
+                return "Password must be of 8 characters with at least one\ndigit and one special character";
+              } else if (!value.contains(RegExp("(?=.*?[0-9])"))) {
+                return "Password must be of 8 characters with at least one\ndigit and one special character";
+              } else if (!value.contains(RegExp("(?=.*?[!@#\$&*~])"))) {
+                return "Password must be of 8 characters with at least one\ndigit and one special characters";
+              } else {
+                return null;
+              }
+            },
+            style: GoogleFonts.montserrat(
+              fontSize: 15.sp,
+              color: AppColors.black,
+              fontWeight: FontWeight.w400,
+            ),
+            cursorColor: AppColors.black,
+            obscureText: controller.ispasswordvisible ? false : true,
+            decoration: InputDecoration(
+              counterText: "",
+              contentPadding: EdgeInsets.symmetric(vertical: 10.h) +
+                  EdgeInsets.only(
+                    left: 45.w,
+                  ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.r),
+                borderSide: BorderSide(
+                  color: AppColors.greyColor.withOpacity(0.12),
+                  width: 1.r,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.r),
+                borderSide: BorderSide(
+                  color: AppColors.greyColor.withOpacity(0.12),
+                  width: 1.r,
+                ),
+              ),
+              suffixIcon: InkWell(
+                onTap: () {
+                  controller.changepasswordvisiblity();
+                },
+                child: Icon(
+                  controller.ispasswordvisible
+                      ? Icons.remove_red_eye
+                      : Icons.visibility_off_rounded,
+                  color: AppColors.greyColor,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(
+                  25.r,
+                ),
+                borderSide: BorderSide(
+                  color: AppColors.greyColor.withOpacity(
+                    0.12,
+                  ),
+                  width: 1.r,
+                ),
+              ),
+              disabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(
+                  25.r,
+                ),
+                borderSide: BorderSide(
+                  color: AppColors.greyColor.withOpacity(
+                    0.12,
+                  ),
+                  width: 1.r,
+                ),
+              ),
+              hintText: "Password",
+              hintStyle: AppText.text15w400.copyWith(
+                color: AppColors.black,
+              ),
+            ),
           ),
-          sizedBoxWithHeight(29),
+          sizedBoxWithHeight(
+            29,
+          ),
           Text.rich(
             TextSpan(
               text: 'Don’t have an account? ',
@@ -138,8 +218,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       formKey.currentState!.reset();
                       controller.emailController.text = "";
                       controller.passwordController.text = '';
-                      AppEnvironment.navigator
-                          .pushNamed(AuthRoutes.signupScreen);
+                      AppEnvironment.navigator.pushNamed(
+                        AuthRoutes.signupScreen,
+                      );
                     },
                   text: 'Sign Up Here',
                   style: GoogleFonts.montserrat(
@@ -156,7 +237,9 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-          sizedBoxWithHeight(29),
+          sizedBoxWithHeight(
+            29,
+          ),
           Text.rich(
             TextSpan(
               text: 'Forgot Password? ',

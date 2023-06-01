@@ -8,15 +8,19 @@ import 'dart:async';
 class ApiBaseHelper {
   final String _baseUrl = "https://backend.qr-fox.com/";
 
-  Future<dynamic> get(String url) async {
+  Future<dynamic> get(String url, Map<String, String>? headers) async {
     debugPrint('Api Get, url $url');
     dynamic responseJson;
     try {
-      final response = await http.get(Uri.parse(_baseUrl + url));
+      final response =
+          await http.get(Uri.parse(_baseUrl + url), headers: headers);
+
       responseJson = _returnResponse(response);
     } on SocketException {
       debugPrint('No net');
       throw FetchDataException(message: 'No Internet connection');
+    } on TimeoutException {
+      print("its Time Out");
     }
     debugPrint('api get recieved!');
     return responseJson;

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';

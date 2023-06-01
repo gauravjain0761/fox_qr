@@ -1,5 +1,6 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:fox/features/home_page/logic/home_controller.dart';
@@ -54,489 +55,630 @@ class _CreateQRPageState extends State<CreateQRPage>
 
   final GlobalKey<FormState> _formKey =
       GlobalKey<FormState>(debugLabel: 'createqr');
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  void _handlerDrawer() {
+    if (_scaffoldKey.currentState?.isEndDrawerOpen ?? false) {
+      _scaffoldKey.currentState?.closeEndDrawer();
+      return;
+    }
+    _scaffoldKey.currentState?.openEndDrawer();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.scaffoldColor,
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  Container(
-                    padding: EdgeInsets.only(
-                      top: 15.h,
-                    ),
-                    color: AppColors.yellowColor,
-                    child: AppHeader(
-                      isDrawerNeeded: false,
+    return WillPopScope(
+      onWillPop: () async {
+        homecontroller.reset(formkey: _formKey);
+        Navigator.pop(context);
+        return false;
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        endDrawer: const AppDrawer(),
+        backgroundColor: AppColors.scaffoldColor,
+        body: SafeArea(
+          child: CustomScrollView(
+            slivers: [
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    Container(
+                      padding: EdgeInsets.only(
+                        top: 15.h,
+                      ),
                       color: AppColors.yellowColor,
-                      leftWidget: InkWell(
-                        onTap: () {
-                          AppEnvironment.navigator.pop();
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            bottom: 4.h,
-                          ),
-                          child: AppImage(
-                            Images.arrowBackBlackFilled,
-                            height: 35.r,
-                            width: 35.r,
+                      child: AppHeader(
+                        isDrawerNeeded: true,
+                        onDrawerTap: _handlerDrawer,
+                        color: AppColors.yellowColor,
+                        leftWidget: InkWell(
+                          onTap: () {
+                            AppEnvironment.navigator.pop();
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              bottom: 4.h,
+                            ),
+                            child: AppImage(
+                              Images.arrowBackBlackFilled,
+                              height: 35.r,
+                              width: 35.r,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  ListView(
-                    shrinkWrap: true,
-                    padding: EdgeInsets.zero,
-                    physics: const ScrollPhysics(),
-                    primary: false,
-                    children: [
-                      Form(
-                        key: _formKey,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        child: _renderQrContainer(
-                          controller: homecontroller,
+                    ListView(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      physics: const ScrollPhysics(),
+                      primary: false,
+                      children: [
+                        Form(
+                          key: _formKey,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          child: _renderQrContainer(
+                            controller: homecontroller,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 33.w,
-                        ),
-                        child: Consumer<HomeController>(
-                          builder: (context, value, child) => Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              sizedBoxWithHeight(20),
-                              Text(
-                                "QR Image Size",
-                                style: AppText.text15w500black,
-                              ),
-                              sizedBoxWithHeight(30),
-                              _qrTabButtons(controller: homecontroller),
-                              sizedBoxWithHeight(30),
-                              Text(
-                                "Custom",
-                                style: AppText.text15w400.copyWith(
-                                  color: value.selectedbutton != 2
-                                      ? AppColors.textcolor
-                                      : AppColors.black,
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 33.w,
+                          ),
+                          child: Consumer<HomeController>(
+                            builder: (context, value, child) => Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                sizedBoxWithHeight(20),
+                                Text(
+                                  "QR Image Size",
+                                  style: AppText.text15w500black,
                                 ),
-                              ),
-                              sizedBoxWithHeight(20),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  right: 90.w,
+                                sizedBoxWithHeight(30),
+                                _qrTabButtons(controller: homecontroller),
+                                sizedBoxWithHeight(30),
+                                Text(
+                                  "Custom",
+                                  style: AppText.text15w400.copyWith(
+                                    color: value.selectedbutton != 2
+                                        ? AppColors.textcolor
+                                        : AppColors.black,
+                                  ),
                                 ),
-                                child: Row(
-                                  children: [
-                                    Flexible(
-                                      child: AppTextFormField(
-                                        maxLength: 4,
-                                        readOnly: homecontroller
-                                                        .selectedbutton ==
-                                                    0 ||
-                                                homecontroller.selectedbutton ==
-                                                    1
-                                            ? true
-                                            : false,
-                                        name: "custom size",
-                                        hintText: "0000",
-
-                                        controller:
-                                            homecontroller.qrSizeController,
-                                        textInputType: TextInputType.number,
-                                        // inputFormatters: [
-                                        //   LengthLimitingTextInputFormatter(4),
-                                        // ],
-
-                                        hintStyle: AppText.text15w400.copyWith(
+                                sizedBoxWithHeight(20),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    right: 90.w,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Flexible(
+                                        child: TextFormField(
+                                          keyboardType: TextInputType.number,
+                                          maxLengthEnforcement:
+                                              MaxLengthEnforcement.enforced,
+                                          controller:
+                                              homecontroller.qrSizeController,
+                                          readOnly:
+                                              homecontroller.selectedbutton ==
+                                                          0 ||
+                                                      homecontroller
+                                                              .selectedbutton ==
+                                                          1
+                                                  ? true
+                                                  : false,
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.montserrat(
+                                            fontSize: 15.sp,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                          onChanged: (value) {
+                                            homecontroller.getqrsize(value);
+                                          },
+                                          cursorColor: AppColors.black,
+                                          decoration: InputDecoration(
+                                            fillColor: value.selectedbutton == 2
+                                                ? Colors.white
+                                                : Colors.transparent,
+                                            filled: true,
+                                            counterText: "",
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 10.h),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(25.r),
+                                              borderSide: BorderSide(
+                                                color: AppColors.greyColor
+                                                    .withOpacity(0.12),
+                                                width: 1.r,
+                                              ),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(25.r),
+                                              borderSide: BorderSide(
+                                                color: AppColors.greyColor
+                                                    .withOpacity(0.12),
+                                                width: 1.r,
+                                              ),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(25.r),
+                                              borderSide: BorderSide(
+                                                color: AppColors.greyColor
+                                                    .withOpacity(0.12),
+                                                width: 1.r,
+                                              ),
+                                            ),
+                                            disabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(25.r),
+                                              borderSide: BorderSide(
+                                                color: AppColors.greyColor
+                                                    .withOpacity(0.12),
+                                                width: 1.r,
+                                              ),
+                                            ),
+                                            hintText: "0000",
+                                            hintStyle:
+                                                AppText.text15w400.copyWith(
+                                              color: value.selectedbutton != 2
+                                                  ? AppColors.textcolor
+                                                  : AppColors.black,
+                                            ),
+                                          ),
+                                          maxLength: 4,
+                                        ),
+                                      ),
+                                      sizedBoxWithWidth(11),
+                                      Text(
+                                        "px",
+                                        style: AppText.text15w400.copyWith(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 12.sp,
                                           color: value.selectedbutton != 2
                                               ? AppColors.textcolor
                                               : AppColors.black,
                                         ),
                                       ),
-                                    ),
-                                    sizedBoxWithWidth(11),
-                                    Text(
-                                      "px",
-                                      style: AppText.text15w400.copyWith(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 12.sp,
-                                        color: value.selectedbutton != 2
-                                            ? AppColors.textcolor
-                                            : AppColors.black,
+                                      sizedBoxWithWidth(21),
+                                      Text(
+                                        "By",
+                                        style: AppText.text15w400.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 12.sp,
+                                          color: value.selectedbutton != 2
+                                              ? AppColors.textcolor
+                                              : AppColors.black,
+                                        ),
                                       ),
-                                    ),
-                                    sizedBoxWithWidth(21),
-                                    Text(
-                                      "By",
-                                      style: AppText.text15w400.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 12.sp,
-                                        color: value.selectedbutton != 2
-                                            ? AppColors.textcolor
-                                            : AppColors.black,
+                                      sizedBoxWithWidth(20),
+                                      Consumer<HomeController>(
+                                        builder: (context, value, child) {
+                                          return Row(
+                                            children: [
+                                              Text(
+                                                homecontroller.qrSizeController
+                                                        .text.isEmpty
+                                                    ? "0000"
+                                                    : homecontroller
+                                                            .qrsizetext +
+                                                        "px",
+                                                style: AppText.text15w400
+                                                    .copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: AppColors
+                                                            .textcolor),
+                                              ),
+                                              Text(
+                                                "  px",
+                                                style: AppText.text15w400
+                                                    .copyWith(
+                                                        fontSize: 12.sp,
+                                                        fontWeight: FontWeight
+                                                            .w300,
+                                                        color:
+                                                            value.selectedbutton !=
+                                                                    2
+                                                                ? AppColors
+                                                                    .textcolor
+                                                                : Colors.black),
+                                              ),
+                                            ],
+                                          );
+                                        },
                                       ),
-                                    ),
-                                    sizedBoxWithWidth(20),
-                                    Text(
-                                      "0000 px",
-                                      style: AppText.text15w400.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: value.selectedbutton != 2
-                                            ? AppColors.textcolor
-                                            : AppColors.black,
-                                      ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      sizedBoxWithHeight(30),
-                      Visibility(
-                        visible:
-                            widget.qrtype.name == "Location" ? true : false,
-                        child: SizedBox(
-                            height: 400.h,
-                            child: ChangeNotifierProvider<HomeController>(
-                              create: (context) =>
-                                  HomeController()..fetchuserlocation(),
-                              child: Consumer<HomeController>(
-                                builder: (context, value, child) {
-                                  if (value.latitude == null) {
-                                    return const CircularProgressIndicator();
-                                  } else {
-                                    return GoogleMap(
-                                      onTap: (LatLng latLng) {
-                                        setState(() {
-                                          value.longitudeController.text =
-                                              latLng.longitude.toString();
-                                        });
-                                        value.ondrag(latLng);
-                                        // Update the marker's position when the user taps on the map
-                                      },
-                                      markers: <Marker>{
-                                        Marker(
-                                          markerId: const MarkerId('marker_1'),
-                                          draggable: true,
-                                          onDrag: (values) {
-                                            setState(() {
-                                              value.longitudeController.text =
-                                                  values.longitude.toString();
-                                            });
-                                            value.ondrag(values);
-                                          },
-                                          position: LatLng(
+                        sizedBoxWithHeight(30),
+                        Visibility(
+                          visible:
+                              widget.qrtype.name == "Location" ? true : false,
+                          child: SizedBox(
+                              height: 400.h,
+                              child: ChangeNotifierProvider<HomeController>(
+                                create: (context) =>
+                                    HomeController()..fetchuserlocation(),
+                                child: Consumer<HomeController>(
+                                  builder: (context, value, child) {
+                                    if (value.latitude == null) {
+                                      return const CircularProgressIndicator();
+                                    } else {
+                                      return GoogleMap(
+                                        onTap: (LatLng latLng) {
+                                          setState(() {
+                                            value.longitudeController.text =
+                                                latLng.longitude.toString();
+                                          });
+                                          value.ondrag(latLng);
+                                          // Update the marker's position when the user taps on the map
+                                        },
+                                        markers: <Marker>{
+                                          Marker(
+                                            markerId:
+                                                const MarkerId('marker_1'),
+                                            draggable: true,
+                                            onDrag: (values) {
+                                              setState(() {
+                                                value.longitudeController.text =
+                                                    values.longitude.toString();
+                                              });
+                                              value.ondrag(values);
+                                            },
+                                            position: LatLng(
+                                              value.latitude!,
+                                              value.longitude!,
+                                            ),
+                                            infoWindow: const InfoWindow(
+                                                title: 'Marker Title',
+                                                snippet: 'Marker Snippet'),
+                                            icon: BitmapDescriptor
+                                                .defaultMarkerWithHue(
+                                                    BitmapDescriptor.hueRed),
+                                          ),
+                                        },
+                                        zoomGesturesEnabled: true,
+                                        zoomControlsEnabled: false,
+                                        gestureRecognizers: <
+                                            Factory<
+                                                OneSequenceGestureRecognizer>>{
+                                          Factory<OneSequenceGestureRecognizer>(
+                                            () => EagerGestureRecognizer(),
+                                          ),
+                                        },
+                                        onMapCreated: (controller) {
+                                          mapController = controller;
+
+                                          mapController.moveCamera(
+                                            CameraUpdate.newLatLng(
+                                              LatLng(value.latitude!,
+                                                  value.longitude!),
+                                            ),
+                                          );
+                                          mapController.animateCamera(
+                                            CameraUpdate.newLatLng(
+                                              LatLng(value.latitude!,
+                                                  value.longitude!),
+                                            ),
+                                          );
+                                          setState(() {
+                                            ismapCreated = true;
+                                          });
+                                        },
+                                        initialCameraPosition: CameraPosition(
+                                          target: LatLng(
                                             value.latitude!,
                                             value.longitude!,
                                           ),
-                                          infoWindow: const InfoWindow(
-                                              title: 'Marker Title',
-                                              snippet: 'Marker Snippet'),
-                                          icon: BitmapDescriptor
-                                              .defaultMarkerWithHue(
-                                                  BitmapDescriptor.hueRed),
+                                          zoom: 15.0,
                                         ),
-                                      },
-                                      zoomGesturesEnabled: true,
-                                      zoomControlsEnabled: false,
-                                      gestureRecognizers: <
-                                          Factory<
-                                              OneSequenceGestureRecognizer>>{
-                                        Factory<OneSequenceGestureRecognizer>(
-                                          () => EagerGestureRecognizer(),
-                                        ),
-                                      },
-                                      onMapCreated: (controller) {
-                                        mapController = controller;
-
-                                        mapController.moveCamera(
-                                          CameraUpdate.newLatLng(
-                                            LatLng(value.latitude!,
-                                                value.longitude!),
-                                          ),
-                                        );
-                                        mapController.animateCamera(
-                                          CameraUpdate.newLatLng(
-                                            LatLng(value.latitude!,
-                                                value.longitude!),
-                                          ),
-                                        );
-                                        setState(() {
-                                          ismapCreated = true;
-                                        });
-                                      },
-                                      initialCameraPosition: CameraPosition(
-                                        target: LatLng(
-                                          value.latitude!,
-                                          value.longitude!,
-                                        ),
-                                        zoom: 15.0,
-                                      ),
-                                    );
-                                  }
-                                },
-                              ),
-                            )),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20.w,
+                                      );
+                                    }
+                                  },
+                                ),
+                              )),
                         ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Visibility(
-                              visible: widget.qrtype.name == "Location"
-                                  ? false
-                                  : true,
-                              child: Divider(
-                                thickness: 0.8,
-                                color: AppColors.textcolor,
-                              ),
-                            ),
-                            sizedBoxWithHeight(30),
-                            _qrTabBar(
-                              controller: homecontroller,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Consumer<HomeController>(
-                        builder: (context, value, child) {
-                          return ShrinkWrappingTabBarView(
-                            tabController: _tabController,
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20.w,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Column(
-                                children: [
-                                  sizedBoxWithHeight(39),
-                                  _qrDisplayImage(controller: homecontroller),
-                                  sizedBoxWithHeight(33),
-                                  Visibility(
-                                    // visible:homecontroller.tab,
-                                    child: _qrChooseImage(
-                                        controller: homecontroller),
-                                  ),
-                                  sizedBoxWithHeight(14),
-                                  Text(
-                                    "Maximum size 5 MB",
-                                    style: AppText.text10w400,
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  sizedBoxWithHeight(39),
-                                  _qrDisplayImage(controller: homecontroller),
-                                  sizedBoxWithHeight(33),
-                                  Visibility(
-                                    // visible:homecontroller.tab,
-                                    child: _qrChooseImage(
-                                        controller: homecontroller),
-                                  ),
-                                  sizedBoxWithHeight(14),
-                                  Text(
-                                    "Maximum size 5 MB",
-                                    style: AppText.text10w400,
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.r),
-                                      color: AppColors.yellowColor,
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 24.w,
-                                      vertical: 15.h,
-                                      // vertical: 20.h,
-                                    ),
-                                    margin: EdgeInsets.symmetric(
-                                          horizontal: 36.w,
-                                        ) +
-                                        EdgeInsets.only(
-                                          top: 40.h,
-                                        ),
-                                    child: Column(
-                                      children: [
-                                        InkWell(
-                                          onTap: () {
-                                            homecontroller
-                                                .chagecolorpickervisiblity();
-                                          },
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                "Colour",
-                                                style:
-                                                    AppText.text17w600.copyWith(
-                                                  color: AppColors.black,
-                                                ),
-                                              ),
-                                              Icon(
-                                                Icons.add,
-                                                color: AppColors.black,
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        Visibility(
-                                          visible: homecontroller
-                                              .iscolorpickervisible,
-                                          child: sizedBoxWithHeight(35),
-                                        ),
-                                        Visibility(
-                                          visible: homecontroller
-                                              .iscolorpickervisible,
-                                          child: cp.ColorPicker(
-                                            enableAlpha: true,
-                                            pickerHsvColor: HSVColor.fromColor(
-                                                Colors.white),
-                                            hexInputController: homecontroller
-                                                .colorcodecontroller,
-
-                                            portraitOnly: false,
-                                            displayThumbColor: false,
-
-                                            labelTypes: const [],
-                                            //  paletteType: PaletteType.hueWheel,
-
-                                            pickerColor:
-                                                Colors.red, //default color
-                                            onColorChanged: (Color color) {
-                                              // homecontroller.oncolorChange(
-                                              //   color: color,
-                                              // );
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              // second tab bar view widget
-
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.r),
-                                  color: AppColors.yellowColor,
+                              Visibility(
+                                visible: widget.qrtype.name == "Location"
+                                    ? false
+                                    : true,
+                                child: Divider(
+                                  thickness: 0.4,
+                                  color: AppColors.textcolor,
                                 ),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 24.w,
-                                  vertical: 15.h,
-                                  // vertical: 20.h,
+                              ),
+                              sizedBoxWithHeight(30),
+                              Text(
+                                "QR Type",
+                                style: GoogleFonts.montserrat(
+                                  color: AppColors.black,
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.w700,
                                 ),
-                                margin: EdgeInsets.symmetric(
-                                      horizontal: 36.w,
-                                    ) +
-                                    EdgeInsets.only(
-                                      top: 40.h,
-                                    ),
-                                child: Column(
+                              ),
+                              sizedBoxWithHeight(30),
+                              _qrTabBar(
+                                controller: homecontroller,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Consumer<HomeController>(
+                          builder: (context, value, child) {
+                            return ShrinkWrappingTabBarView(
+                              tabController: _tabController,
+                              children: [
+                                Column(
                                   children: [
-                                    InkWell(
-                                      onTap: () {
-                                        homecontroller
-                                            .chagecolorpickervisiblity();
-                                      },
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                    sizedBoxWithHeight(39),
+                                    _qrDisplayImage(controller: homecontroller),
+                                    sizedBoxWithHeight(33),
+                                    Visibility(
+                                      // visible:homecontroller.tab,
+                                      child: _qrChooseImage(
+                                          controller: homecontroller),
+                                    ),
+                                    sizedBoxWithHeight(14),
+                                    Text(
+                                      "Maximum size 5 MB",
+                                      style: AppText.text10w400,
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    sizedBoxWithHeight(39),
+                                    _qrDisplayImage(controller: homecontroller),
+                                    sizedBoxWithHeight(33),
+                                    Visibility(
+                                      // visible:homecontroller.tab,
+                                      child: _qrChooseImage(
+                                          controller: homecontroller),
+                                    ),
+                                    sizedBoxWithHeight(14),
+                                    Text(
+                                      "Maximum size 5 MB",
+                                      style: AppText.text10w400,
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        boxShadow: const [
+                                          BoxShadow(
+                                              color: Color(0xffe4e5e4),
+                                              spreadRadius: 0,
+                                              blurRadius: 24,
+                                              offset: Offset(
+                                                0,
+                                                3,
+                                              ))
+                                        ],
+                                        borderRadius:
+                                            BorderRadius.circular(30.r),
+                                        color: AppColors.yellowColor,
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 24.w,
+                                        vertical: 15.h,
+                                        // vertical: 20.h,
+                                      ),
+                                      margin: EdgeInsets.symmetric(
+                                            horizontal: 36.w,
+                                          ) +
+                                          EdgeInsets.only(
+                                            top: 40.h,
+                                            bottom: 20.h,
+                                          ),
+                                      child: Column(
                                         children: [
-                                          Text(
-                                            "Colour",
-                                            style: AppText.text17w600.copyWith(
-                                              color: AppColors.black,
+                                          InkWell(
+                                            onTap: () {
+                                              homecontroller
+                                                  .chagecolorpickervisiblity();
+                                            },
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "Pick A Colour",
+                                                  style: AppText.text17w600
+                                                      .copyWith(
+                                                    color: AppColors.black,
+                                                  ),
+                                                ),
+                                                Icon(
+                                                  homecontroller
+                                                          .iscolorpickervisible
+                                                      ? Icons.remove
+                                                      : Icons.add,
+                                                  color: AppColors.black,
+                                                )
+                                              ],
                                             ),
                                           ),
-                                          Icon(
-                                            Icons.add,
-                                            color: AppColors.black,
-                                          )
+                                          Visibility(
+                                            visible: homecontroller
+                                                .iscolorpickervisible,
+                                            child: sizedBoxWithHeight(35),
+                                          ),
+                                          Visibility(
+                                            visible: homecontroller
+                                                .iscolorpickervisible,
+                                            child: cp.ColorPicker(
+                                              enableAlpha: true,
+                                              pickerHsvColor:
+                                                  HSVColor.fromColor(
+                                                      Colors.white),
+                                              hexInputController: homecontroller
+                                                  .colorcodecontroller,
+
+                                              portraitOnly: false,
+                                              displayThumbColor: false,
+
+                                              labelTypes: const [],
+                                              //  paletteType: PaletteType.hueWheel,
+
+                                              pickerColor:
+                                                  Colors.red, //default color
+                                              onColorChanged: (Color color) {
+                                                // homecontroller.oncolorChange(
+                                                //   color: color,
+                                                // );
+                                              },
+                                            ),
+                                          ),
                                         ],
-                                      ),
-                                    ),
-                                    Visibility(
-                                      visible:
-                                          homecontroller.iscolorpickervisible,
-                                      child: sizedBoxWithHeight(35),
-                                    ),
-                                    Visibility(
-                                      visible:
-                                          homecontroller.iscolorpickervisible,
-                                      child: cp.ColorPicker(
-                                        enableAlpha: true,
-                                        pickerHsvColor:
-                                            HSVColor.fromColor(Colors.white),
-                                        hexInputController:
-                                            homecontroller.colorcodecontroller,
-
-                                        portraitOnly: false,
-                                        displayThumbColor: false,
-
-                                        labelTypes: const [],
-                                        //  paletteType: PaletteType.hueWheel,
-
-                                        pickerColor: Colors.red, //default color
-                                        onColorChanged: (Color color) {
-                                          // homecontroller.oncolorChange(
-                                          //   color: color,
-                                          // );
-                                        },
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                      sizedBoxWithHeight(30),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const AppImage(
-                            "assets/images/premium.svg",
-                          ),
-                          sizedBoxWithWidth(10),
-                          Text(
-                            "Get Premium And Track Analytics!",
-                            style: AppText.text15w500black.copyWith(
-                              color: AppColors.black.withOpacity(0.4),
-                              decoration: TextDecoration.underline,
+                                // second tab bar view widget
+
+                                Container(
+                                  decoration: BoxDecoration(
+                                    boxShadow: const [
+                                      BoxShadow(
+                                          color: Color(0xffe4e5e4),
+                                          spreadRadius: 0,
+                                          blurRadius: 24,
+                                          offset: Offset(
+                                            0,
+                                            3,
+                                          ))
+                                    ],
+                                    borderRadius: BorderRadius.circular(30.r),
+                                    color: AppColors.yellowColor,
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 24.w,
+                                    vertical: 15.h,
+                                    // vertical: 20.h,
+                                  ),
+                                  margin: EdgeInsets.symmetric(
+                                        horizontal: 36.w,
+                                      ) +
+                                      EdgeInsets.only(
+                                        top: 40.h,
+                                        bottom: 20.h,
+                                      ),
+                                  child: Column(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          homecontroller
+                                              .chagecolorpickervisiblity();
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              "Pick A Colour",
+                                              style:
+                                                  AppText.text17w600.copyWith(
+                                                color: AppColors.black,
+                                              ),
+                                            ),
+                                            Icon(
+                                              Icons.add,
+                                              color: AppColors.black,
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible:
+                                            homecontroller.iscolorpickervisible,
+                                        child: sizedBoxWithHeight(35),
+                                      ),
+                                      Visibility(
+                                        visible:
+                                            homecontroller.iscolorpickervisible,
+                                        child: cp.ColorPicker(
+                                          enableAlpha: true,
+                                          pickerHsvColor:
+                                              HSVColor.fromColor(Colors.white),
+                                          hexInputController: homecontroller
+                                              .colorcodecontroller,
+
+                                          portraitOnly: false,
+                                          displayThumbColor: false,
+
+                                          labelTypes: const [],
+                                          //  paletteType: PaletteType.hueWheel,
+
+                                          pickerColor:
+                                              Colors.red, //default color
+                                          onColorChanged: (Color color) {
+                                            // homecontroller.oncolorChange(
+                                            //   color: color,
+                                            // );
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const AppImage(
+                              "assets/images/premium.svg",
                             ),
-                          )
-                        ],
-                      ),
-                      sizedBoxWithHeight(30),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20.w,
+                            sizedBoxWithWidth(10),
+                            Text(
+                              "Get Premium And Track Analytics!",
+                              style: AppText.text15w500black.copyWith(
+                                color: AppColors.black.withOpacity(0.4),
+                                decoration: TextDecoration.underline,
+                              ),
+                            )
+                          ],
                         ),
-                        child: Divider(
-                          thickness: 0.8,
-                          color: AppColors.textcolor,
+                        sizedBoxWithHeight(30),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20.w,
+                          ),
+                          child: Divider(
+                            thickness: 0.8,
+                            color: AppColors.textcolor,
+                          ),
                         ),
-                      ),
-                      sizedBoxWithHeight(30),
-                      _qrSubmit(controller: homecontroller),
-                      sizedBoxWithHeight(10),
-                    ],
-                  )
-                ],
-              ),
-            )
-          ],
+                        sizedBoxWithHeight(30),
+                        _qrSubmit(controller: homecontroller),
+                        sizedBoxWithHeight(10),
+                      ],
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -557,10 +699,9 @@ class _CreateQRPageState extends State<CreateQRPage>
           onTap: () {
             if (_formKey.currentState!.validate()) {
               if (homecontroller.imageFile != null) {
-                if (homecontroller.selectedbutton == 2) {
-                  if (homecontroller.qrSizeController.text.isEmpty) {
-                    context.showSnackBar("Please Enter Qr Size");
-                  }
+                if (homecontroller.selectedbutton == 2 &&
+                    homecontroller.qrSizeController.text.isEmpty) {
+                  context.showSnackBar("Please Enter Qr Size");
                 } else if (controller.qrStyle == "halftone") {
                   showModalBottomSheet(
                     shape: const RoundedRectangleBorder(
@@ -654,15 +795,25 @@ class _CreateQRPageState extends State<CreateQRPage>
                       );
                     },
                   );
-                } else {
+                } else if (controller.qrStyle == "fullcolor") {
                   controller.createqr(
-                      formkey: _formKey,
-                      qrtype: widget.qrtype.id,
-                      context: context,
-                      qrname: widget.qrtype.name);
+                    formkey: _formKey,
+                    qrtype: widget.qrtype.id,
+                    context: context,
+                    qrname: widget.qrtype.name,
+                  );
                 }
+              } else if (controller.qrStyle == "oldschool") {
+                controller.createqr(
+                  formkey: _formKey,
+                  qrtype: widget.qrtype.id,
+                  context: context,
+                  qrname: widget.qrtype.name,
+                );
               } else {
-                context.showErrorSnackBar("Please Select Image");
+                context.showErrorSnackBar(
+                  "Please Select Image",
+                );
               }
             }
           },
@@ -678,7 +829,8 @@ class _CreateQRPageState extends State<CreateQRPage>
                   right: 20.w,
                 ),
             decoration: BoxDecoration(
-                color: homecontroller.imageFile == null
+                color: homecontroller.imageFile == null &&
+                        controller.qrStyle != "oldschool"
                     ? AppColors.black.withOpacity(0.3)
                     : AppColors.black,
                 borderRadius: BorderRadius.circular(
@@ -706,10 +858,17 @@ class _CreateQRPageState extends State<CreateQRPage>
   Widget _qrTabBar({required HomeController controller}) {
     return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: 16.w,
+        horizontal: 1.w,
       ),
       decoration: BoxDecoration(
-        color: AppColors.blueTickColor.withOpacity(0.5),
+        boxShadow: [
+          BoxShadow(
+              color: Color(0xffd5eff4),
+              spreadRadius: 2,
+              blurRadius: 0,
+              offset: Offset(0, 0))
+        ],
+        color: Color(0xffb3e8f8),
         borderRadius: BorderRadius.circular(
           25.0,
         ),
@@ -1128,42 +1287,56 @@ class _CreateQRPageState extends State<CreateQRPage>
             ),
           ),
           sizedBoxWithHeight(40),
-          GridView.builder(
-              shrinkWrap: true,
-              itemCount: controller.icons.length,
-              primary: false,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                mainAxisSpacing: 10.h,
-                crossAxisSpacing: 10.w,
-              ),
-              itemBuilder: (context, index) {
-                return InkWell(
-                  // onTap: () {
-                  //   controller.changeIconindex(index: index);
-                  // },
-                  child: Container(
-                    height: 69.h,
-                    width: 69.w,
-                    decoration: BoxDecoration(
-                        color: AppColors.yellowColor,
-                        borderRadius: BorderRadius.circular(10.r),
-                        border: Border.all(
-                          color: AppColors.black,
-                        )),
-                    child: Center(
-                      child: AppImage(
-                        controller.icons.elementAt(
-                          index,
-                        ),
-                        height: 38.h,
-                        width: 38.w,
-                        color: AppColors.black,
-                      ),
-                    ),
+          Consumer<HomeController>(
+            builder: (context, value, child) {
+              return GridView.builder(
+                  shrinkWrap: true,
+                  itemCount: controller.icons.length,
+                  primary: false,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    mainAxisSpacing: 10.h,
+                    crossAxisSpacing: 10.w,
                   ),
-                );
-              }),
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        controller.changeIconindex(index: index);
+                      },
+                      child: Container(
+                        height: 69.h,
+                        width: 69.w,
+                        decoration: BoxDecoration(
+                            color: controller.selectedicon == index
+                                ? Colors.black
+                                : AppColors.yellowColor,
+                            boxShadow: [
+                              BoxShadow(
+                                offset: Offset(0, 0),
+                                blurRadius: 2,
+                                color: Colors.grey,
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(10.r),
+                            border: Border.all(
+                              color: AppColors.black,
+                            )),
+                        child: Center(
+                          child: AppImage(
+                              controller.icons.elementAt(
+                                index,
+                              ),
+                              height: 38.h,
+                              width: 38.w,
+                              color: controller.selectedicon == index
+                                  ? Colors.white
+                                  : null),
+                        ),
+                      ),
+                    );
+                  });
+            },
+          ),
           sizedBoxWithHeight(36),
         ],
       );

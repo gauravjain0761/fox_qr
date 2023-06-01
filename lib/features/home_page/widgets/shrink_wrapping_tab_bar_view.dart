@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class ShrinkWrappingTabBarView extends StatelessWidget {
@@ -31,6 +30,7 @@ class ShrinkWrappingTabBarView extends StatelessWidget {
         ),
         Positioned.fill(
           child: TabBarView(
+            physics: NeverScrollableScrollPhysics(),
             controller: tabController,
             children: children
                 .map(

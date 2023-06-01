@@ -25,5 +25,10 @@ final drawerItems = <DrawerItem>[
     icon: Images.privacyImage,
     text: 'Privacy Policy',
     type: DrawerItemType.PRIVACY_POLICY,
-  )
+  ),
+  const DrawerItem(
+    icon: Images.contactImage,
+    text: 'Contact Support',
+    type: DrawerItemType.CONTACT_US,
+  ),
 ];

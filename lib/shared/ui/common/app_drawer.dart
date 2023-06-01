@@ -1,8 +1,10 @@
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:fox/features/auth/logic/login_controller.dart';
-import 'package:fox/routes/arguments/content_args.dart';
-import 'package:fox/features/premium/purchase_screen.dart';
+import 'package:fox/features/drawer/contactus.dart';
+import 'package:fox/features/drawer/privacy_policy.dart';
+import 'package:fox/features/drawer/terms_conditions.dart';
+import 'package:fox/features/price_plan_ui/home_view.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
@@ -129,7 +131,7 @@ class _AppDrawerState extends State<AppDrawer> {
         AppEnvironment.navigator.push(
           PageRouteBuilder(
             opaque: false,
-            pageBuilder: (_, __, ___) => const PurchaseScreen(),
+            pageBuilder: (_, __, ___) => const PurchaseNew(),
           ),
         );
         break;
@@ -139,26 +141,28 @@ class _AppDrawerState extends State<AppDrawer> {
         break;
 
       case DrawerItemType.TERMS_OF_USE:
-        AppEnvironment.navigator.pushNamed(
-          GeneralRoutes.contentScreen,
-          arguments: ContentArgs(
-              title: 'Terms of Use',
-              onTap: () {
-                AppEnvironment.navigator.pop();
-              },
-              contentUrl: ''),
+        AppEnvironment.navigator.push(
+          PageRouteBuilder(
+            opaque: false,
+            pageBuilder: (_, __, ___) => const TermsConditions(),
+          ),
         );
         break;
 
       case DrawerItemType.PRIVACY_POLICY:
-        AppEnvironment.navigator.pushNamed(
-          GeneralRoutes.contentScreen,
-          arguments: ContentArgs(
-              title: 'Privacy Policy',
-              onTap: () {
-                AppEnvironment.navigator.pop();
-              },
-              contentUrl: ''),
+        AppEnvironment.navigator.push(
+          PageRouteBuilder(
+            opaque: false,
+            pageBuilder: (_, __, ___) => PrivacyPolicyScreen(),
+          ),
+        );
+        break;
+      case DrawerItemType.CONTACT_US:
+        AppEnvironment.navigator.push(
+          PageRouteBuilder(
+            opaque: false,
+            pageBuilder: (_, __, ___) => const ContactUsScreen(),
+          ),
         );
         break;
 

@@ -18,9 +18,9 @@ class GeneralRoutes {
   static const homePageScreen = '$generalLeading/home-screen';
   static const pastQrScreen = '$generalLeading/past-qr-screen';
   static const imageEditor = '$generalLeading/image-editor';
-  static const contentScreen = '$generalLeading/content-screen';
   static const displayQRDetailsScreen =
       '$generalLeading/displat-details-screen';
+  static const purchasenew = '$generalLeading/purchasenew';
 
   static final generalRoutes = <String>{
     dummy,
@@ -30,7 +30,8 @@ class GeneralRoutes {
     appImageViewer,
     preferencesPage,
     privacyPolicy,
-    createqr
+    createqr,
+    purchasenew,
   };
 
   static Widget getPage(String currentRoute, Object? args) {
@@ -61,6 +62,10 @@ class GeneralRoutes {
       case GeneralRoutes.preferencesPage:
         child = const SizedBox();
         break;
+
+      case GeneralRoutes.purchasenew:
+        child = const PurchaseNew();
+        break;
       case GeneralRoutes.privacyPolicy:
         child = const SizedBox();
         break;
@@ -77,7 +82,9 @@ class GeneralRoutes {
         child = const PastQrScreen();
         break;
       case GeneralRoutes.displayQRDetailsScreen:
-        child = const DisplayQRDetailsScreen();
+        child = DisplayQRDetailsScreen(
+          qrid: args as String,
+        );
         break;
       case GeneralRoutes.createqr:
         child = CreateQRPage(
@@ -91,19 +98,6 @@ class GeneralRoutes {
           child = const SizedBox();
           // ImageEditor(
           //   appBar: AppColors.black,
-          //   allowCamera: true,
-          //   allowGallery: true,
-          //   image: args as Uint8List,
-          // );
-        }
-        break;
-      case GeneralRoutes.contentScreen:
-        if (CommonUtils.hasInvalidArgs<ContentArgs>(args!)) {
-          child = CommonUtils.misTypedArgsRoute<ContentArgs>(args);
-        } else {
-          child = ContentScreen(data: args as ContentArgs);
-          // ImageEditor(
-          //   appBar: Colors.black,
           //   allowCamera: true,
           //   allowGallery: true,
           //   image: args as Uint8List,

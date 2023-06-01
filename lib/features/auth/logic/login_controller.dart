@@ -11,8 +11,14 @@ class LoginController extends ChangeNotifier {
 
   get login => _login;
 
+  bool ispasswordvisible = false;
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  void changepasswordvisiblity() {
+    ispasswordvisible = !ispasswordvisible;
+    notifyListeners();
+  }
 
   void reset() {
     emailController.clear();

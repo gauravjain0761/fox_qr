@@ -8,16 +8,20 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
   final Widget? leftWidget;
   final VoidCallback? onDrawerTap;
   final Color? color;
+  final Color? drawercolor;
   final bool isDrawerNeeded;
   final String? title;
+  final double? fontsize;
 
   const AppHeader({
     super.key,
     this.color,
+    this.drawercolor,
     this.child,
     this.height = kToolbarHeight,
     this.onDrawerTap,
     this.title,
+    this.fontsize,
     this.leftWidget,
     this.isDrawerNeeded = true,
   });
@@ -52,9 +56,9 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
                   child: Text(
                     title!,
                     style: AppText.text14w400.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.black,
-                    ),
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.black,
+                        fontSize: fontsize),
                   ),
                 ),
               },
@@ -65,6 +69,7 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
                     onTap: onDrawerTap,
                     child: AppImage(
                       Images.drawerIcon,
+                      color: drawercolor,
                       width: 16.r,
                       height: 16.r,
                     ),

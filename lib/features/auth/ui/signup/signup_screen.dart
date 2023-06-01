@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 
 import 'package:fox/features/auth/logic/register_controller.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:layout_grids/layout_grids.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,16 +19,6 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   final GlobalKey<FormState> formKey =
       GlobalKey<FormState>(debugLabel: '_register');
   @override
@@ -38,6 +30,7 @@ class _SignupScreenState extends State<SignupScreen> {
         formKey.currentState!.reset();
         registercontroller.emailController.text = "";
         registercontroller.password.text = '';
+        registercontroller.username.text = "";
         return true;
       },
       child: Scaffold(
@@ -62,7 +55,7 @@ class _SignupScreenState extends State<SignupScreen> {
             onTap: FocusScope.of(context).unfocus,
             child: Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: 32.w,
+                horizontal: 33.w,
                 vertical: 24.h,
               ),
               child: Column(
@@ -223,7 +216,7 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
           sizedBoxWithHeight(41),
           AppTextFormField(
-            suffixIcon: const SizedBox(),
+            // suffixIcon: const SizedBox(),
             validator: (value) {
               if (isValidEmail(value!)) {
                 return null;
@@ -241,15 +234,15 @@ class _SignupScreenState extends State<SignupScreen> {
             textAlign: TextAlign.center,
             validator: (value) {
               if (value!.length < 8) {
-                return "Minimum 8 Characters required";
+                return "Password must be of 8 characters with at least one\ndigit and one special character";
               } else if (!value.contains(
                 RegExp("(?=.*?[A-Za-z])"),
               )) {
-                return "Minimum 1 alphabet Required";
+                return "Password must be of 8 characters with at least one\ndigit and one special character";
               } else if (!value.contains(RegExp("(?=.*?[0-9])"))) {
-                return "Minimum 1 Digit Required";
+                return "Password must be of 8 characters with at least one\ndigit and one special character";
               } else if (!value.contains(RegExp("(?=.*?[!@#\$&*~])"))) {
-                return "Minimum 1 Special Character Required";
+                return "Password must be of 8 characters with at least one\ndigit and one special character";
               } else {
                 return null;
               }
@@ -260,10 +253,13 @@ class _SignupScreenState extends State<SignupScreen> {
               fontWeight: FontWeight.w400,
             ),
             cursorColor: AppColors.black,
-            obscureText: controller.ispasswordvisible,
+            obscureText: controller.ispasswordvisible ? false : true,
             decoration: InputDecoration(
               counterText: "",
-              contentPadding: EdgeInsets.symmetric(vertical: 10.h),
+              contentPadding: EdgeInsets.symmetric(vertical: 10.h) +
+                  EdgeInsets.only(
+                    left: 45.w,
+                  ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(25.r),
                 borderSide: BorderSide(
@@ -328,10 +324,15 @@ class _SignupScreenState extends State<SignupScreen> {
               fontWeight: FontWeight.w400,
             ),
             cursorColor: AppColors.black,
-            obscureText: controller.iscpasswordvisible,
+            obscureText: controller.iscpasswordvisible ? false : true,
             decoration: InputDecoration(
               counterText: "",
-              contentPadding: EdgeInsets.symmetric(vertical: 10.h),
+              contentPadding: EdgeInsets.symmetric(
+                    vertical: 10.h,
+                  ) +
+                  EdgeInsets.only(
+                    left: 45.w,
+                  ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(25.r),
                 borderSide: BorderSide(
@@ -385,21 +386,21 @@ class _SignupScreenState extends State<SignupScreen> {
           //   hintText: "Re-Enter Password",
           // ),
           sizedBoxWithHeight(40),
-          // Divider(
-          //   color: AppColors.greyColor.withOpacity(0.12),
-          //   height: 1.h,
-          // ),
-          // sizedBoxWithHeight(40),
-          // AppTextFormField(
-          //   validator: FormBuilderValidators.compose(
-          //     [
-          //       FormBuilderValidators.required(),
-          //     ],
-          //   ),
-          //   name: 'username',
-          //   hintText: "Username",
-          // ),
-          //  Spacer(),
+          Divider(
+            color: AppColors.greyColor.withOpacity(0.12),
+            height: 1.h,
+          ),
+          sizedBoxWithHeight(40),
+          AppTextFormField(
+            controller: controller.username,
+            validator: FormBuilderValidators.compose(
+              [
+                FormBuilderValidators.required(),
+              ],
+            ),
+            name: 'username',
+            hintText: "Username",
+          ),
         ],
       ),
     );
