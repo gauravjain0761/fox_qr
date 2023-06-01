@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rive/rive.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -12,12 +13,20 @@ class SplashScreen extends StatelessWidget {
     return Scaffold(
       body: GestureDetector(
         onTap: _handleOnTap,
+        // child: const RiveAnimation.asset(
+        //   'assets/images/qrfox_Landing_Screen.riv',
+        //   fit: BoxFit.fill,
+        // ),
         child: Stack(
           children: [
-            const AppImage(Images.backgroundPinkSplash),
+            const AppImage(
+              Images.backgroundPinkSplash,
+            ),
             const Align(
               alignment: Alignment.bottomLeft,
-              child: AppImage(Images.backgroundYellowSplash),
+              child: AppImage(
+                Images.backgroundYellowSplash,
+              ),
             ),
             SizedBox(
               width: double.infinity,
@@ -25,7 +34,7 @@ class SplashScreen extends StatelessWidget {
                 children: [
                   const Spacer(),
                   AppImage(
-                    Images.foxLogo,
+                    "assets/images/splashlogo.svg",
                     width: 150.r,
                     height: 150.r,
                   ),
@@ -33,36 +42,31 @@ class SplashScreen extends StatelessWidget {
                   Text.rich(
                     TextSpan(
                       text: 'QR',
-                      style: TextStyle(
+                      style: GoogleFonts.montserrat(
                         color: AppColors.pinkColor,
-                        fontSize: 48.sp,
-                        fontWeight: FontWeight.w700,
+                        fontSize: 55.sp,
+                        fontWeight: FontWeight.bold,
                       ),
                       children: [
                         TextSpan(
                           text: ' FOX',
-                          style: TextStyle(
+                          style: GoogleFonts.montserrat(
                             color: AppColors.black,
-                            fontSize: 48.sp,
-                            fontWeight: FontWeight.w700,
+                            fontSize: 53.sp,
+                            fontWeight: FontWeight.bold,
                           ),
                         )
                       ],
                     ),
                   ),
                   const Spacer(),
-                  Text(
-                    'WELCOME',
-                    style: TextStyle(
-                      fontSize: 35.sp,
-                      color: AppColors.black,
-                      fontWeight: FontWeight.w700,
-                    ),
+                  AppImage(
+                    "assets/images/welcome.svg",
                   ),
                   sizedBoxWithHeight(26),
                   Text(
                     'Tap To Continue',
-                    style: TextStyle(
+                    style: GoogleFonts.montserrat(
                       fontSize: 12.sp,
                       color: AppColors.black,
                       fontWeight: FontWeight.w400,
@@ -79,6 +83,8 @@ class SplashScreen extends StatelessWidget {
   }
 
   void _handleOnTap() {
-    AppEnvironment.navigator.pushNamed(GeneralRoutes.starterScreen);
+    AppEnvironment.navigator.pushReplacementNamed(
+      GeneralRoutes.starterScreen,
+    );
   }
 }

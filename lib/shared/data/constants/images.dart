@@ -18,6 +18,7 @@ class Images {
   static const manScanThisImage = 'assets/images/man_scan_this.png';
 
   static const planImage = 'assets/images/plan.svg';
+  static const contactImage = "assets/images/contact_support.svg";
   static const photoLibraryImage = 'assets/images/photo_library.svg';
   static const termsImage = 'assets/images/terms.svg';
   static const privacyImage = 'assets/images/privacy.svg';

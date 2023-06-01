@@ -2,7 +2,7 @@ import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTextFormField extends StatefulWidget {
   final String name;
@@ -11,8 +11,15 @@ class AppTextFormField extends StatefulWidget {
   final String? labelText;
   final String? hintText;
   final TextStyle? hintStyle;
+  final VoidCallback? onTap;
+  final TextInputType? textInputType;
   final bool? alignLabelWithHint;
   final int? minLines;
+  final bool? obscuretext;
+  final Widget? suffixIcon;
+  final bool? readOnly;
+  final Color? fillColor;
+  final int? maxLength;
   final int? maxLines;
   final FormFieldValidator<String>? validator;
   final List<TextInputFormatter>? inputFormatters;
@@ -24,8 +31,14 @@ class AppTextFormField extends StatefulWidget {
     Key? key,
     required this.name,
     this.style,
+    this.obscuretext,
+    this.suffixIcon,
+    this.onTap,
     this.labelText,
+    this.fillColor,
     this.hintText,
+    this.readOnly = false,
+    this.textInputType,
     this.hintStyle,
     this.alignLabelWithHint,
     this.minLines,
@@ -34,6 +47,7 @@ class AppTextFormField extends StatefulWidget {
     this.inputFormatters,
     this.controller,
     this.initialValue,
+    this.maxLength,
     this.enabled = true,
   }) : super(key: key);
 
@@ -59,15 +73,20 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    return FormBuilderTextField(
-      name: widget.name,
+    return TextFormField(
+      maxLength: widget.maxLength,
+      keyboardType: widget.textInputType,
+      maxLengthEnforcement: MaxLengthEnforcement.enforced,
       initialValue: widget.initialValue,
       enabled: widget.enabled,
       controller: widget.controller,
+      readOnly: widget.readOnly!,
+      obscureText: widget.obscuretext ?? false,
       textAlign: TextAlign.center,
+      onTap: widget.onTap,
       style: widget.enabled
           ? (widget.style ??
-              TextStyle(
+              GoogleFonts.montserrat(
                 fontSize: 15.sp,
                 color: AppColors.black,
                 fontWeight: FontWeight.w400,
@@ -75,6 +94,9 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
           : AppText.text16w600OffWhite,
       cursorColor: AppColors.black,
       decoration: InputDecoration(
+        fillColor: widget.fillColor ?? Colors.transparent,
+        filled: true,
+        counterText: "",
         contentPadding: EdgeInsets.symmetric(vertical: 10.h),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(25.r),
@@ -90,6 +112,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
             width: 1.r,
           ),
         ),
+        suffixIcon: widget.suffixIcon,
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(25.r),
           borderSide: BorderSide(

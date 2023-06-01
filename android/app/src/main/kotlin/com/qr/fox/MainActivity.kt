@@ -1,4 +1,4 @@
-package com.qr.fox
+package com.foxtrot.qrfox
 
 import io.flutter.embedding.android.FlutterActivity
 

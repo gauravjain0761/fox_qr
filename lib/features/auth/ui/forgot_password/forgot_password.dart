@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fox/features/auth/logic/reset_password_controller.dart';
 import 'package:fox/routes/routes.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -12,10 +15,36 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  final GlobalKey<FormState> _formKey =
+      GlobalKey<FormState>(debugLabel: 'forgot');
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final controller = Provider.of<ResetPasswordController>(context);
     return Scaffold(
-      appBar: const AppHeader(leftWidget: AppBackButton()),
+      appBar: AppHeader(
+        leftWidget: InkWell(
+          onTap: () {
+            AppEnvironment.navigator.pop();
+          },
+          child: AppImage(
+            Images.arrowBackBlackFilled,
+            height: 40.r,
+            width: 40.r,
+          ),
+        ),
+        height: 70.h,
+        onDrawerTap: () async {
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setBool(Strings.isskipped, true).then((value) {
+            AppEnvironment.navigator.pushNamed(GeneralRoutes.homePageScreen);
+          });
+        },
+      ),
       backgroundColor: AppColors.white,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -26,18 +55,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             child: Column(
               children: [
                 const Spacer(),
-                _renderForm(),
+                _renderForm(controller: controller),
                 const Spacer(),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  child: AppButton(
-                    border: Border.all(color: AppColors.black, width: 2.r),
-                    primaryColor: AppColors.white,
-                    highLightedTextColor: AppColors.black,
-                    textStyle: AppText.text20w600Black,
-                    onClick: _handleSend,
-                    label: 'Send',
-                  ),
+                AppButton(
+                  border: Border.all(color: AppColors.black, width: 2.r),
+                  primaryColor: AppColors.white,
+                  highLightedTextColor: AppColors.black,
+                  textStyle: AppText.text20w600Black,
+                  onClick: (() {
+                    _handleSend(controller: controller);
+                  }),
+                  label: 'Send',
                 ),
               ],
             ),
@@ -47,40 +75,54 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
-  Widget _renderForm() {
-    return Column(
-      children: [
-        Text(
-          'Forgot Password',
-          style: TextStyle(
-            fontSize: 25.sp,
-            fontWeight: FontWeight.w700,
-            color: AppColors.black,
+  Widget _renderForm({required ResetPasswordController controller}) {
+    return Form(
+      key: _formKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      child: Column(
+        children: [
+          Text(
+            'Forgot Password',
+            style: GoogleFonts.montserrat(
+              fontSize: 25.sp,
+              fontWeight: FontWeight.w700,
+              color: AppColors.black,
+            ),
           ),
-        ),
-        sizedBoxWithHeight(40),
-        Text(
-          'Please enter your email address to\nreceive an activation link',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 15.sp,
-            fontWeight: FontWeight.w600,
-            color: AppColors.black,
+          sizedBoxWithHeight(40),
+          Text(
+            'Please enter your email address to\nreceive an activation link',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.montserrat(
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w600,
+              color: AppColors.black,
+            ),
           ),
-        ),
-        sizedBoxWithHeight(40),
-        AppTextFormField(
-          name: 'email',
-          hintText: "email@address.foxtrot",
-          hintStyle: AppText.text15w400.copyWith(
-            color: AppColors.black,
+          sizedBoxWithHeight(40),
+          AppTextFormField(
+            name: 'email',
+            controller: controller.emailController,
+            hintText: "email@address.foxtrot",
+            validator: (value) {
+              if (isValidEmail(value!)) {
+                return null;
+              } else {
+                return "Please Enter Valid Email";
+              }
+            },
+            hintStyle: AppText.text15w400.copyWith(
+              color: AppColors.black,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  void _handleSend() {
-    AppEnvironment.navigator.pushNamed(AuthRoutes.createNewPasswordScreen);
+  void _handleSend({required ResetPasswordController controller}) {
+    if (_formKey.currentState!.validate()) {
+      controller.forgotpassword(context: context);
+    }
   }
 }

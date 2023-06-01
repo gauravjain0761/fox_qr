@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:fox/features/past_qr/logic/past_qr_controller.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class QrWeeklyActivity extends StatefulWidget {
-  QrWeeklyActivity({super.key});
+  final PastQrController controller;
+  QrWeeklyActivity({
+    super.key,
+    required this.controller,
+  });
 
   @override
   State<QrWeeklyActivity> createState() => _QrWeeklyActivityState();
@@ -70,7 +75,8 @@ class _QrWeeklyActivityState extends State<QrWeeklyActivity> {
                     color: AppColors.black.withOpacity(0.7),
                   ),
                 ),
-                Text('31', style: AppText.text60w600)
+                Text(widget.controller.qrdetail!.qr.scanCount.toString(),
+                    style: AppText.text60w600)
               ],
             ),
             sizedBoxWithWidth(24),

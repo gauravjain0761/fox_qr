@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:fox/features/past_qr/index.dart';
+import 'package:fox/features/past_qr/logic/past_qr_controller.dart';
 import 'package:fox/shared/shared.dart';
 import 'package:fox/themes/app_text.dart';
 
 class QrReports extends StatefulWidget {
-  const QrReports({super.key});
+  final PastQrController controller;
+  const QrReports({
+    super.key,
+    required this.controller,
+  });
 
   @override
   State<QrReports> createState() => _QrReportsState();
@@ -21,7 +26,9 @@ class _QrReportsState extends State<QrReports> {
           sizedBoxWithHeight(32),
           _renderContainer(
             title: 'This Week’s Activity',
-            child: QrWeeklyActivity(),
+            child: QrWeeklyActivity(
+              controller: widget.controller,
+            ),
           ),
           sizedBoxWithHeight(20),
           _renderContainer(title: 'Locations', child: const LocationReports()),
